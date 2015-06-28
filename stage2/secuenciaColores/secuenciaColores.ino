@@ -1,4 +1,4 @@
-const int _n_levels=4;                //Número de elementos que contendrá la serie para ganar el juego
+const int _n_levels=10;                //Número de elementos que contendrá la serie para ganar el juego
 // Variables
 int inputPin[] = {2,3,4,5};           //Declaración de las entradas que se usarán
 int ledPin[] = {7,8,9,10};            //Pines para los leds de la secuencia
@@ -7,24 +7,26 @@ int lastButtonState[] = {0,0,0,0};     // El estado previo de los botones
 int serie_array[_n_levels],currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int readyLed = 12;                      //Led que nos dará señal que espera la entrada del usuario
 //Función que inicializa el vector de la serie y la variable currentValue
-void getInitialArray(int n)
+void getInitialArray(int n,int n_pin)
 {
-  
+  Serial.println("N_PIN");
+  Serial.println(n_pin);
+  Serial.println("/N_PIN");
   int rand_num,random_selected;
   for(int i=0; i<n; i=i+1){
         serie_array[i]=0;
         currentValue = 0;
-        rand_num = random(1,200);
+        rand_num = random(0,n_pin);
+        if(i>0)
+        {
+          while(rand_num == serie_array[i-1]) //Nunca habrá dos digitos iguales consecutivos
+          {
+            rand_num = random(0,n_pin);
+          }
+        }
         Serial.println(rand_num);
-        if (rand_num <= 50)
-          random_selected=0;
-        else if (rand_num>50 && rand_num<=100)
-          random_selected=1;
-        else if (rand_num>100 && rand_num<=150)
-          random_selected=2;
-         else if (rand_num<=200)
-          random_selected=3;
-         serie_array[i]=random_selected;    //guardamos el valor pseudorandom seleccionado
+        random_selected = rand_num;
+        serie_array[i]=random_selected;    //guardamos el valor pseudorandom seleccionado
       }
 
     
@@ -59,10 +61,10 @@ int n_levels =_n_levels; //niveles (se asigna el valor de _n_levels a n_levels p
 void loop() {
  
 int i;
+int n_pin = sizeof(inputPin)/sizeof(int); // Número de pines que serán nuestras entradas y salidas
 //Iniciamos el juego
 if (game_on == 0){
-  getInitialArray(n_levels);
-  getInitialArray(n_levels);
+  getInitialArray(n_levels,n_pin);
   //Mostramos la secuencia del juego (cambiará tras el error)
   for (i = 0; i < n_levels; i= i + 1){
       leddelay = ledtime/(1+(speedfactor/n_levels)*(currentlevel - 1));
