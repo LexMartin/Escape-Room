@@ -6,6 +6,9 @@ int buttonState[] = {0,0,0,0};         // El estado actual de los botones
 int lastButtonState[] = {0,0,0,0};     // El estado previo de los botones
 int serie_array[_n_levels],currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int readyLed = 12;                      //Led que nos dará señal que espera la entrada del usuario
+long previousMillis = 0;                //Variable para determinar el tiempo que ha pasado mientras el usuario no activa una entrada
+long interval = 7000;                   //Intervalo de tiempo que se le permitirá al usuario entre cada entrada 
+
 //Función que inicializa el vector de la serie y la variable currentValue
 void getInitialArray(int n,int n_pin)
 {
@@ -32,6 +35,30 @@ void getInitialArray(int n,int n_pin)
     
 }
 
+//Función para leer el cambio en los sensores PIR
+int readPIR(int pinPir)
+{
+  int readPin = digitalRead(pinPir);
+
+  return readPin;
+}
+
+//Función para encender el led que esperamos en la secuencia
+
+void waitPin(int n,int led)
+{
+  for(int i = 0; i<n;i=i+1)
+  {
+    if(ledPin[i] != ledPin[led])
+    {
+      digitalWrite(ledPin[i],LOW);
+    }
+    else
+    {
+      digitalWrite(ledPin[i],HIGH);
+    }
+  }
+}
 
 void setup() {
   
@@ -65,15 +92,17 @@ int n_pin = sizeof(inputPin)/sizeof(int); // Número de pines que serán nuestra
 //Iniciamos el juego
 if (game_on == 0){
   getInitialArray(n_levels,n_pin);
+  unsigned long currentMillisBegin = millis();
+  previousMillis = currentMillisBegin;
   //Mostramos la secuencia del juego (cambiará tras el error)
-  for (i = 0; i < n_levels; i= i + 1){
+  /*for (i = 0; i < n_levels; i= i + 1){
       leddelay = ledtime/(1+(speedfactor/n_levels)*(currentlevel - 1));
       pinLedSerie = serie_array[i];
       digitalWrite(pinLedSerie+7, HIGH);
       delay(leddelay);
       digitalWrite(pinLedSerie+7, LOW);
       delay(100/speedfactor);
- }
+ }*/
  game_on = 1; 
 
 }
@@ -87,15 +116,28 @@ int j = 0; //la posición actual de la serie
 while (j < n_levels){
   Serial.println("CurrentLEVEL");
   Serial.println(currentlevel);    
-    while (buttonchange == 0){
+    while (buttonchange == 0 && game_on==1){
+          digitalWrite(readyLed,HIGH);
+          //waitPin(n_pin,ledPin[serie_array[currentlevel-1]]);
+          digitalWrite(ledPin[serie_array[currentlevel-1]],HIGH);
           for (i = 0; i < 4; i = i + 1){ 
-          buttonState[i] = digitalRead(i+2);
+          buttonState[i] = readPIR(i+2);//digitalRead(i+2);
           buttonchange = buttonchange + buttonState[i];
         }
-        digitalWrite(readyLed,HIGH);
+        unsigned long currentMillis = millis();
+
+        if(currentMillis - previousMillis > interval)
+        {
+          //previousMillis = currentMillis;
+          right = 0;
+          break;
+        }
+        
+        //Serial.println(ledPin[serie_array[currentlevel-1]]);
         delay(100);
     }
     digitalWrite(readyLed,LOW);
+    digitalWrite(ledPin[serie_array[currentlevel-1]],LOW);
      for (i = 0; i < 4; i = i + 1){
         if (buttonState[i] == HIGH) {
             digitalWrite(i+7, HIGH);
@@ -105,6 +147,7 @@ while (j < n_levels){
             currentValue=i; 
             buttonState[i] = LOW;
             buttonchange = 0;
+            break;
          }
        } 
         if (currentValue == serie_array[j]){
@@ -124,6 +167,7 @@ while (j < n_levels){
           i = 0;
           game_on = 0;
           currentlevel = 1;
+          //previousMillis = 0;
           Serial.println("Error!!!");
           for (i = 0; i < 4; i = i + 1){
                  digitalWrite(i+7, HIGH);
@@ -143,6 +187,8 @@ while (j < n_levels){
                
                delay(500);
                game_on = 0;
+               unsigned long currentMillisError = millis();
+               previousMillis = currentMillisError;
                //salimos del while para iniciar un nuevo juego
                break;
                
@@ -154,6 +200,8 @@ while (j < n_levels){
             currentlevel++;
             Serial.println("Coorecto aumenta 1");
             Serial.println(currentlevel);
+            unsigned long currentMillisOK = millis();
+            previousMillis =currentMillisOK;
             
             }
         //si se llega al final de la secuencia el juego se ha ganado   
@@ -180,7 +228,6 @@ while (j < n_levels){
 
         
 }
-
 
 
 

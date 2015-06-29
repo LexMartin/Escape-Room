@@ -1,37 +1,26 @@
-const int _n_levels=5;                //Número de elementos que contendrá la serie para ganar el juego
+const int _n_levels=4;                //Número de elementos que contendrá la serie para ganar el juego
 // Variables
-int inputPin[] = {2,3,4,5};           //Declaración de las entradas que se usarán
-int ledPin[] = {7,8,9,10};            //Pines para los leds de la secuencia
+int inputPin[] = {2,3,4,5};           //Declaración de las entradas que se usarán  .. FALTA MODIFICAR A 7 ENTRADAS QU SERAN LOS RFID
 int buttonState[] = {0,0,0,0};         // El estado actual de los botones
 int lastButtonState[] = {0,0,0,0};     // El estado previo de los botones
-int serie_array[_n_levels],currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
+int serie_array[]={0,1,2,3};    //es la secuancia estatica que necesitamos ingresar {DO,RE,MI,FA,SOL,LA,SI}
+int currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int readyLed = 12;                      //Led que nos dará señal que espera la entrada del usuario
+int hole = 0;                 //el compartimiento secreto está cerrado
 //Función que inicializa el vector de la serie y la variable currentValue
-void getInitialArray(int n,int n_pin)
-{
-  Serial.println("N_PIN");
-  Serial.println(n_pin);
-  Serial.println("/N_PIN");
-  int rand_num,random_selected;
-  for(int i=0; i<n; i=i+1){
-        serie_array[i]=0;
-        currentValue = 0;
-        rand_num = random(0,n_pin);
-        if(i>0)
-        {
-          while(rand_num == serie_array[i-1]) //Nunca habrá dos digitos iguales consecutivos
-          {
-            rand_num = random(0,n_pin);
-          }
-        }
-        Serial.println(rand_num);
-        random_selected = rand_num;
-        serie_array[i]=random_selected;    //guardamos el valor pseudorandom seleccionado
-      }
 
-    
+
+int readRFID(int value){
+  int readValue = digitalRead(value);
+  return readValue;
+
 }
 
+void openHole()
+{
+  hole = 1; // se abre el compartimiento secreto
+  Serial.println("Se abre el compartimiento, juego ganado");
+}
 
 void setup() {
   
@@ -40,7 +29,7 @@ void setup() {
   for(int x = 0; x < 4; x=x+1)
   {
     pinMode(inputPin[x],INPUT);
-    pinMode(ledPin[x],OUTPUT);
+    //pinMode(ledPin[x],OUTPUT);
   }
   pinMode(readyLed,OUTPUT);
   // iniciamos la comunicación serial para imprimir por la salida estandar
@@ -61,19 +50,15 @@ int n_levels =_n_levels; //niveles (se asigna el valor de _n_levels a n_levels p
 void loop() {
  
 int i;
+while(hole == 1){} //Si el compartimiento secreto está abierto NO se hace nada hasta el reicio
 int n_pin = sizeof(inputPin)/sizeof(int); // Número de pines que serán nuestras entradas y salidas
 //Iniciamos el juego
 if (game_on == 0){
-  getInitialArray(n_levels,n_pin);
-  //Mostramos la secuencia del juego (cambiará tras el error)
-  for (i = 0; i < n_levels; i= i + 1){
-      leddelay = ledtime/(1+(speedfactor/n_levels)*(currentlevel - 1));
-      pinLedSerie = serie_array[i];
-      digitalWrite(pinLedSerie+7, HIGH);
-      delay(leddelay);
-      digitalWrite(pinLedSerie+7, LOW);
-      delay(100/speedfactor);
- }
+  //getInitialArray(n_levels,n_pin);
+  for(int x =0;x<4;x=x+1){
+    Serial.println(serie_array[x]);
+  }
+ 
  game_on = 1; 
 
 }
@@ -89,7 +74,7 @@ while (j < n_levels){
   Serial.println(currentlevel);    
     while (buttonchange == 0){
           for (i = 0; i < 4; i = i + 1){ 
-          buttonState[i] = digitalRead(i+2);
+          buttonState[i] =readRFID(i+2);// digitalRead(i+2);
           buttonchange = buttonchange + buttonState[i];
         }
         digitalWrite(readyLed,HIGH);
@@ -98,10 +83,8 @@ while (j < n_levels){
     digitalWrite(readyLed,LOW);
      for (i = 0; i < 4; i = i + 1){
         if (buttonState[i] == HIGH) {
-            digitalWrite(i+7, HIGH);
+           
             delay(ledtime);
-            digitalWrite(i+7, LOW);
-            
             currentValue=i; 
             buttonState[i] = LOW;
             buttonchange = 0;
@@ -125,26 +108,11 @@ while (j < n_levels){
           game_on = 0;
           currentlevel = 1;
           Serial.println("Error!!!");
-          for (i = 0; i < 4; i = i + 1){
-                 digitalWrite(i+7, HIGH);
-              }
-               delay(ledtime);   
-           for (i = 0; i < 4; i = i + 1){
-                 digitalWrite(i+7, LOW);   
-               }
-               delay (200);
-          for (i = 0; i < 4; i = i + 1){
-                 digitalWrite(i+7, HIGH);
-              }
-               delay(ledtime);  
-           for (i = 0; i < 4; i = i + 1){
-                 digitalWrite(i+7, LOW);   
-               }
-               
-               delay(500);
-               game_on = 0;
-               //salimos del while para iniciar un nuevo juego
-               break;
+          delay(ledtime);         
+          delay(500);
+          game_on = 0;
+          //salimos del while para iniciar un nuevo juego
+          break;
                
         }
 
@@ -160,18 +128,8 @@ while (j < n_levels){
         if (currentlevel > n_levels){
           Serial.println("Ha ganado el juego");
           delay(500);
-          // Se crea una serie automática cuando se ha ganado el juego
-          int winSerie[] = {0, 1, 2, 3, 3, 2, 1, 0, 0};
-          int tmp = 0;
+          openHole(); //Se abre el compartimiento secreto
           
-          int delays[] = {50, 80, 100, 120, 160, 200, 240, 250, 300}; 
-          for (i = 0; i < 9; i = i + 1){
-            tmp = winSerie[i];
-            digitalWrite(tmp+7, HIGH);
-            delay(200);
-            digitalWrite(tmp+7, LOW);
-            delay(delays[i]);
-          }
           //El juego se ha terminado
           game_on = 0;
           currentlevel = 1;
