@@ -1,14 +1,29 @@
 // PROYECTO CALENDARIO MAYA
 
+
+// In this part the PIN is specified to use (PIN = number)
 int CalendarCorrect = 13;
-int CalendarIncorrect = 3;
-int PartOne = 7;
-int PartTwo = 4;
-int PartThree = 2;
+int CalendarIncorrect = 2;
+
+int PartOne = 3;
+int PartTwo = 5;
+int PartThree = 7;
+
+
+// for magnetic sensor
+int OtherPartOne = 4;
+int OtherPartTwo = 6;
+int OtherPartThree = 8;
+
+
 int ValPartOne = 0;
 int ValPartTwo = 0;
 int ValPartThree = 0;
 
+
+int OtherValPartOne = 0;
+int OtherValPartTwo = 0;
+int OtherValPartThree = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -17,6 +32,10 @@ void setup() {
   pinMode(PartOne, INPUT); 
   pinMode(PartTwo, INPUT); 
   pinMode(PartThree, INPUT); 
+  
+  pinMode(OtherPartOne, INPUT); 
+  pinMode(OtherPartTwo, INPUT); 
+  pinMode(OtherPartThree, INPUT); 
 }
 
 void loop() {
@@ -25,7 +44,12 @@ void loop() {
   ValPartTwo = digitalRead(PartTwo);   
   ValPartThree = digitalRead(PartThree); 
   
-  if(ValPartOne == HIGH && ValPartTwo == HIGH && ValPartThree  == HIGH){
+  
+  OtherValPartOne = digitalRead(OtherPartOne);   
+  OtherValPartTwo = digitalRead(OtherPartTwo);   
+  OtherValPartThree = digitalRead(OtherPartThree); 
+  
+  if(myFunction(ValPartOne,OtherValPartOne) && myFunction(ValPartTwo,OtherValPartTwo) && myFunction(ValPartThree,OtherValPartThree)){
   digitalWrite(CalendarCorrect, HIGH);
   digitalWrite(CalendarIncorrect, LOW);
  
@@ -39,3 +63,18 @@ void loop() {
   
   
 }
+
+
+ // THIS FUNCTION IS FOR magnetic sensor
+  bool myFunction(int x, int y){
+  if (x == HIGH || y == HIGH){
+  return true;
+  }
+  
+  else{
+   return false;
+  }
+  
+  
+  } // bool
+  

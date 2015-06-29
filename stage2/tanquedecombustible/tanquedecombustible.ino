@@ -2,9 +2,14 @@
 
 
 int FullTank = 13; 
-int NoFullTank = 3;
-int BallGolf = 7;
+int NoFullTank = 2;
+
+int BallGolf = 3;
+int OtherBallGolf = 4;
+
+
 int ValBallGolf = 0;
+int OtherValBallGolf = 0;
 
 
 void setup() {
@@ -12,22 +17,24 @@ void setup() {
   pinMode(FullTank, OUTPUT);  
   pinMode(NoFullTank, OUTPUT);  
   pinMode(BallGolf, INPUT); 
+  pinMode(OtherBallGolf, INPUT); 
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   ValBallGolf = digitalRead(BallGolf);   
+  OtherValBallGolf = digitalRead(OtherBallGolf);  
 
   
-  if(ValBallGolf == HIGH){
+  if(myFunction(ValBallGolf,OtherValBallGolf)){
   digitalWrite(FullTank, HIGH);
   digitalWrite(NoFullTank, LOW);
   
   }
   else{
-  digitalWrite(Incorrect, HIGH);
-  digitalWrite(NoFullTank, LOW);
+  digitalWrite(NoFullTank, HIGH);
+  digitalWrite(FullTank, LOW);
 
   
   }
@@ -35,3 +42,17 @@ void loop() {
   
   
 }
+
+
+ // THIS FUNCTION IS FOR magnetic sensor
+  bool myFunction(int x, int y){
+  if (x == HIGH || y == HIGH){
+  return true;
+  }
+  
+  else{
+   return false;
+  }
+  
+  
+  } // bool

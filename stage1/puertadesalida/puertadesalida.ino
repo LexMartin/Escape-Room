@@ -1,11 +1,26 @@
 //PROYECTO PUERTA DE SALIDA
 
-int 4CorrectPoints = 13;
-int 4NoCorrectPoints = 3;
-int PointOne = 7;
-int PointTwo = 4;
-int PointThree = 2;
-int PointFour = 5;
+int CorrectPoints = 13;
+int NoCorrectPoints = 2;
+
+int PointOne = 3;
+int PointTwo = 5;
+int PointThree = 7;
+int PointFour = 9;
+
+
+int OtherPointOne = 4;
+int OtherPointTwo = 6;
+int OtherPointThree = 8;
+int OtherPointFour = 10;
+
+
+int OtherValPointOne = 0;
+int OtherValPointTwo = 0;
+int OtherValPointThree = 0;
+int OtherValPointFour = 0;
+
+
 int ValPointOne = 0;
 int ValPointTwo = 0;
 int ValPointThree = 0;
@@ -14,12 +29,19 @@ int ValPointFour = 0;
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(4CorrectPoints, OUTPUT);      
-  pinMode(4NoCorrectPoints, OUTPUT);  
+  pinMode(CorrectPoints, OUTPUT);      
+  pinMode(NoCorrectPoints, OUTPUT);  
   pinMode(PointOne, INPUT); 
   pinMode(PointTwo, INPUT); 
   pinMode(PointThree, INPUT); 
-   pinMode(PointFour, INPUT);
+  pinMode(PointFour, INPUT);
+  
+  
+  pinMode(OtherPointOne, INPUT); 
+  pinMode(OtherPointTwo, INPUT); 
+  pinMode(OtherPointThree, INPUT); 
+  pinMode(OtherPointFour, INPUT);
+  
 }
 
 void loop() {
@@ -29,17 +51,38 @@ void loop() {
   ValPointThree = digitalRead(PointThree); 
   ValPointFour = digitalRead(PointFour); 
   
-  if(ValPointOne == HIGH && ValPointTwo == HIGH && ValPointThree  == HIGH && ValPointFour  == HIGH){
-  digitalWrite(4CorrectPoints, HIGH);
-  digitalWrite(4NoCorrectPoints, LOW);
+  
+  OtherValPointOne = digitalRead(OtherPointOne);   
+  OtherValPointTwo = digitalRead(OtherPointTwo);   
+  OtherValPointThree = digitalRead(OtherPointThree); 
+  OtherValPointFour = digitalRead(OtherPointFour); 
+  
+  
+  if(myFunction(ValPointOne,OtherValPointOne) && myFunction(ValPointTwo,OtherValPointTwo) && myFunction(ValPointThree,OtherValPointThree) && myFunction(ValPointFour,OtherValPointFour) ){
+  digitalWrite(CorrectPoints, HIGH);
+  digitalWrite(NoCorrectPoints, LOW);
   
   }
   else{
-  digitalWrite(4NoCorrectPoints, HIGH);
-  digitalWrite(4CorrectPoints, LOW);
+  digitalWrite(NoCorrectPoints, HIGH);
+  digitalWrite(CorrectPoints, LOW);
   
   }
   
   
   
 }
+
+ // THIS FUNCTION IS FOR magnetic sensor
+  bool myFunction(int x, int y){
+  if (x == HIGH || y == HIGH){
+  return true;
+  }
+  
+  else{
+   return false;
+  }
+  
+  
+  } // bool
+  
