@@ -1,5 +1,6 @@
 // PROYECTO CALENDARIO MAYA
-
+//  Created by Cindy Canul Canul
+// E-mail: cindycanul92@gmail.com
 
 // In this part the PIN is specified to use (PIN = number)
 int CalendarCorrect = 13;

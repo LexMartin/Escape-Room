@@ -1,5 +1,6 @@
 // LOS TANQUES DE COMBUSTIBLE
-
+//  Created by Cindy Canul Canul
+// E-mail: cindycanul92@gmail.com
 
 int FullTank = 13; 
 int NoFullTank = 2;

@@ -1,4 +1,6 @@
 //PROYECTO PUERTA DE SALIDA
+//  Created by Cindy Canul Canul
+// E-mail: cindycanul92@gmail.com
 
 int CorrectPoints = 13;
 int NoCorrectPoints = 2;

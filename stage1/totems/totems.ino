@@ -1,4 +1,6 @@
 // PROYECTO TOTEMS
+//  Created by Cindy Canul Canul
+// E-mail: cindycanul92@gmail.com
 
 
 

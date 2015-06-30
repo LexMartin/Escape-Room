@@ -1,4 +1,7 @@
 // DISCOS MAGNETICOS
+//  Created by Cindy Canul Canul
+// E-mail: cindycanul92@gmail.com
+
 
 int CorrectPoints = 13; 
 int IncorrectPoints = 2;

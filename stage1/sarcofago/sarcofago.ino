@@ -1,4 +1,6 @@
 // PROYECTO SARCOFAGO
+//  Created by Cindy Canul Canul
+// E-mail: cindycanul92@gmail.com
 
 // In this part the PIN is specified to use (PIN = number)
 int KeyCorrect = 13; 
