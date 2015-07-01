@@ -1,3 +1,7 @@
+// Created by Cindy Canul Canul & Cristian Kumul Uc
+// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+
+
 const int _n_levels=5;                //Número de elementos que contendrá la serie para ganar el juego
 // Variables
 int inputPin[] = {2,3,4,5};           //Declaración de las entradas que se usarán
