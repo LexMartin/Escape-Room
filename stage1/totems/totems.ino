@@ -1,6 +1,6 @@
 // PROYECTO TOTEMS
-//  Created by Cindy Canul Canul
-// E-mail: cindycanul92@gmail.com
+// Created by Cindy Canul Canul & Cristian Kumul Uc
+// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 
 
 

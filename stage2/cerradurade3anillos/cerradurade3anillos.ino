@@ -1,6 +1,9 @@
 // PROYECTO CERRADURA DE 3 ANILLOS
-//  Created by Cindy Canul Canul
-// E-mail: cindycanul92@gmail.com
+// Created by Cindy Canul Canul & Cristian Kumul Uc
+// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+
+
+
 
 //limite de entradas del arduino
 
