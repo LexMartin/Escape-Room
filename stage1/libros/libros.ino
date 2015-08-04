@@ -2,7 +2,7 @@
 
 /*
 
-Automatizacion - totems
+Automatizacion - libros
 Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
@@ -11,15 +11,15 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
-int totemPartOne = 2; // Parte uno del totem
-int totemPartTwo = 3; // parte dos
-int totemPartThree = 4; // parte tres
+int libroUno = 2; 
+int libroDos = 3; 
+int libroTres = 4; 
 
 // Estas son por seguridad, en caso de que las primeras partes no funcionen
 
-int totemPart1 = 5; // respaldo de parte uno del totem
-int totemPart2  = 6; // respaldo parte dos
-int totemPart3 = 7;  // respaldo parte tres
+int libroUno1 = 5; // respaldo de parte uno del totem
+int libroDos2  = 6; // respaldo parte dos
+int libroTres3 = 7;  // respaldo parte tres
 
 // validacion del juego
 int correct = 13;  // Cuando las tres partes del totem estan correctas
@@ -46,13 +46,13 @@ int temp6 = 0;
 // para declarar la entra o salida del PIN
 void setup() {
   // entradas
-  pinMode(totemPartOne, INPUT); 
-  pinMode(totemPartTwo, INPUT); 
-  pinMode(totemPartThree, INPUT); 
+  pinMode(libroUno, INPUT); 
+  pinMode(libroDos, INPUT); 
+  pinMode(libroTres, INPUT); 
   
-  pinMode(totemPart1, INPUT); 
-  pinMode(totemPart2, INPUT); 
-  pinMode(totemPart3, INPUT); 
+  pinMode(libroUno1, INPUT); 
+  pinMode(libroDos2, INPUT); 
+  pinMode(libroTres3, INPUT); 
   
   // salidas
   pinMode(correct, OUTPUT);  
@@ -69,12 +69,12 @@ void setup() {
  
 void loop() {
   
-  temp1 = digitalRead(totemPartOne);           temp4 = digitalRead(totemPart1);  
-  temp2 = digitalRead(totemPartTwo);           temp5 = digitalRead(totemPart2);  
-  temp3 = digitalRead(totemPartThree);         temp6 = digitalRead(totemPart3);  
+  temp1 = digitalRead(libroUno);           temp4 = digitalRead(libroUno1);  
+  temp2 = digitalRead(libroDos);           temp5 = digitalRead(libroDos2);  
+  temp3 = digitalRead(libroTres);         temp6 = digitalRead(libroTres3);  
  
  
-  if( (comparePairs(totemPartOne,totemPart1)) && (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
+  if( (comparePairs(libroUno,libroUno1)) && (comparePairs(libroDos,libroDos2)) && (comparePairs(libroTres,libroTres3)))
   {
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);

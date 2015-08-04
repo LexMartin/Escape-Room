@@ -1,90 +1,151 @@
-//PROYECTO PUERTA DE SALIDA
-// Created by Cindy Canul Canul & Cristian Kumul Uc
-// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
-
-int CorrectPoints = 13;
-int NoCorrectPoints = 2;
-
-int PointOne = 3;
-int PointTwo = 5;
-int PointThree = 7;
-int PointFour = 9;
+#include <Servo.h>
 
 
-int OtherPointOne = 4;
-int OtherPointTwo = 6;
-int OtherPointThree = 8;
-int OtherPointFour = 10;
+/*
+
+Automatizacion - puerta de salida
+Created by Cindy Canul Canul & Cristian Kumul Uc
+E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+*/
 
 
-int OtherValPointOne = 0;
-int OtherValPointTwo = 0;
-int OtherValPointThree = 0;
-int OtherValPointFour = 0;
+// Variables, el numero descrito es el PIN a utilizar en la placa arduino.
+// El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
+
+int puntoUno = 2;
+int puntoDos = 3;
+int puntoTres = 4;
+int puntoCuatro = 5;
+
+// Estas son por seguridad, en caso de que las primeras partes no funcionen
+
+int puntoUno1 = 6;
+int puntoDos2 = 7;
+int puntoTres3 = 8;
+int puntoCuatro4 = 9;
+
+// validacion del juego
+int correct = 13;  
+int incorrect = 10;  
 
 
-int ValPointOne = 0;
-int ValPointTwo = 0;
-int ValPointThree = 0;
-int ValPointFour = 0;
+// para servomotror
+Servo servo; // se crea un objeto servo
+int posicion; // posicion del servo
+int servoActivo = 9;
 
+//variables para guardar
+int temp = 0;
+int temp1 = 0;
+int temp2 = 0;
+int temp3 = 0;
+int temp4 = 0;
+int temp5 = 0;
+int temp6 = 0;
+int temp7 = 0;
+int temp8 = 0;
+
+
+// INPUTS AND OUTPUTS, entradas y salidas
+// para declarar la entra o salida del PIN
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(CorrectPoints, OUTPUT);      
-  pinMode(NoCorrectPoints, OUTPUT);  
-  pinMode(PointOne, INPUT); 
-  pinMode(PointTwo, INPUT); 
-  pinMode(PointThree, INPUT); 
-  pinMode(PointFour, INPUT);
+  //entradas
+  
+  pinMode(puntoUno, INPUT); 
+  pinMode(puntoDos, INPUT); 
+  pinMode(puntoTres, INPUT); 
+  pinMode(puntoCuatro, INPUT); 
+  
+  pinMode(puntoUno1, INPUT); 
+  pinMode(puntoDos2, INPUT); 
+  pinMode(puntoTres3, INPUT); 
+  pinMode(puntoCuatro4, INPUT); 
+  
+
+  // salidas
+  pinMode(correct, OUTPUT);  
+  pinMode(incorrect, OUTPUT); 
+  pinMode(servoActivo, OUTPUT);     
+  
+  // servomotor
+  servo.attach(10); // seleccionamos el PIN a usar.
   
   
-  pinMode(OtherPointOne, INPUT); 
-  pinMode(OtherPointTwo, INPUT); 
-  pinMode(OtherPointThree, INPUT); 
-  pinMode(OtherPointFour, INPUT);
+  Serial.begin(9600); 
+  
+ 
   
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  ValPointOne = digitalRead(PointOne);   
-  ValPointTwo = digitalRead(PointTwo);   
-  ValPointThree = digitalRead(PointThree); 
-  ValPointFour = digitalRead(PointFour); 
   
   
-  OtherValPointOne = digitalRead(OtherPointOne);   
-  OtherValPointTwo = digitalRead(OtherPointTwo);   
-  OtherValPointThree = digitalRead(OtherPointThree); 
-  OtherValPointFour = digitalRead(OtherPointFour); 
-  
-  
-  if(myFunction(ValPointOne,OtherValPointOne) && myFunction(ValPointTwo,OtherValPointTwo) && myFunction(ValPointThree,OtherValPointThree) && myFunction(ValPointFour,OtherValPointFour) ){
-  digitalWrite(CorrectPoints, HIGH);
-  digitalWrite(NoCorrectPoints, LOW);
-  
-  }
-  else{
-  digitalWrite(NoCorrectPoints, HIGH);
-  digitalWrite(CorrectPoints, LOW);
-  
-  }
-  
-  
-  
-}
+  temp1 = digitalRead(puntoUno);           temp5 = digitalRead(puntoUno1);  
+  temp2 = digitalRead(puntoDos);           temp6 = digitalRead(puntoDos2);  
+  temp3 = digitalRead(puntoTres);           temp7 = digitalRead(puntoTres3); 
+   temp4 = digitalRead(puntoCuatro);           temp8 = digitalRead(puntoCuatro4);  
+ 
 
- // THIS FUNCTION IS FOR magnetic sensor
-  bool myFunction(int x, int y){
-  if (x == HIGH || y == HIGH){
-  return true;
-  }
   
+if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4)))
+  {
+  digitalWrite(correct, HIGH);
+  digitalWrite(incorrect, LOW);
+  temp = correct;
+  temp = true;
+  /*
+  if(temp)
+  {
+    digitalWrite(z,HIGH);
+
+  }
+  */
+  
+  }
   else{
-   return false;
+  digitalWrite(correct, LOW);
+  digitalWrite(incorrect, HIGH);
+  temp = correct;
+  temp = false;
+ 
+  
+  
+  }
+  //Serial.println(comparePairs(ValTotem,OtherValTotem));
+  
+  
+  
+  // activacion del servo
+    if(temp == HIGH)
+  {
+    digitalWrite(servoActivo,HIGH);
+    posicion = 150;            // Establecemos el valor de la posicion a 150º  
+    posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
+    servo.write(posicion);                  // Escribimos la posicion con el mapa de valores al servo  
+    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
+
+  }else{
+   digitalWrite(servoActivo,LOW);
+  
   }
   
   
-  } // bool
+  
+ }  //loop
+ 
+ 
+ // THIS FUNCTION IS FOR HALL SENSOR
+  bool getHallValue(int x){
+    if (digitalRead(x)) return true;
+    else return false;
+  }
+  
+  bool comparePairs(int x, int y)
+  {
+    if(getHallValue(x) == true || getHallValue(y) == true ) 
+    return true;
+    else 
+    return false;
+  }
   

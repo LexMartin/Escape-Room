@@ -1,81 +1,126 @@
-// PROYECTO CALENDARIO MAYA
-// Created by Cindy Canul Canul & Cristian Kumul Uc
-// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+#include <Servo.h>
 
-// In this part the PIN is specified to use (PIN = number)
-int CalendarCorrect = 13;
-int CalendarIncorrect = 2;
+/*
+Automatizacion - Calendario maya
+Created by Cindy Canul Canul & Cristian Kumul Uc
+E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+*/
 
-int PartOne = 3;
-int PartTwo = 5;
-int PartThree = 7;
+// Variables, el numero descrito es el PIN a utilizar en la placa arduino.
+// El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
+
+int primerAnillo = 2; // primer anillo
+int segundoAnillo = 3; // segungo anillo
+
+// Estas son por seguridad, en caso de que las primeras partes no funcionen
+
+int primerAnillo1 = 4;
+int segundoAnillo2 = 5;
+
+//validacion del juego
+int correct = 13;
+int incorrect = 8;
+
+// para servomotror
+Servo servo; // se crea un objeto servo
+int posicion; // posicion del servo
+int servoActivo = 9;
 
 
-// for magnetic sensor
-int OtherPartOne = 4;
-int OtherPartTwo = 6;
-int OtherPartThree = 8;
+// variables para guardar
+int temp1 = 0;
+int temp2 = 0;
+int temp3 = 0;
+int temp4 = 0;
+int temp = 0;
 
 
-int ValPartOne = 0;
-int ValPartTwo = 0;
-int ValPartThree = 0;
-
-
-int OtherValPartOne = 0;
-int OtherValPartTwo = 0;
-int OtherValPartThree = 0;
+// INPUTS AND OUTPUTS, entradas y salidas
+// para declarar la entra o salida del PIN
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(CalendarCorrect, OUTPUT);      
-  pinMode(CalendarIncorrect, OUTPUT);   
-  pinMode(PartOne, INPUT); 
-  pinMode(PartTwo, INPUT); 
-  pinMode(PartThree, INPUT); 
   
-  pinMode(OtherPartOne, INPUT); 
-  pinMode(OtherPartTwo, INPUT); 
-  pinMode(OtherPartThree, INPUT); 
+  //entradas
+  pinMode(primerAnillo, INPUT);
+  pinMode(segundoAnillo, INPUT);
+  
+  
+  pinMode(primerAnillo1, INPUT);
+  pinMode(segundoAnillo2, INPUT);
+  
+  // salidas
+  pinMode(correct, OUTPUT);  
+  pinMode(incorrect, OUTPUT); 
+  
+  // servomotor
+  servo.attach(10); // seleccionamos el PIN a usar.
+  
+  
+  Serial.begin(9600); 
+  
+  
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  ValPartOne = digitalRead(PartOne);   
-  ValPartTwo = digitalRead(PartTwo);   
-  ValPartThree = digitalRead(PartThree); 
+  temp1 = digitalRead(primerAnillo);   
+  temp2 = digitalRead(segundoAnillo);
+
   
+  temp3 = digitalRead(primerAnillo1); 
+  temp4 = digitalRead(segundoAnillo2);   
+ 
+ 
+ 
   
-  OtherValPartOne = digitalRead(OtherPartOne);   
-  OtherValPartTwo = digitalRead(OtherPartTwo);   
-  OtherValPartThree = digitalRead(OtherPartThree); 
-  
-  if(myFunction(ValPartOne,OtherValPartOne) && myFunction(ValPartTwo,OtherValPartTwo) && myFunction(ValPartThree,OtherValPartThree)){
-  digitalWrite(CalendarCorrect, HIGH);
-  digitalWrite(CalendarIncorrect, LOW);
+  if(comparePairs(primerAnillo,primerAnillo1) && comparePairs(segundoAnillo,segundoAnillo2) ){
+  digitalWrite(correct, HIGH);
+  digitalWrite(incorrect, LOW);
+  temp = correct;
+  temp = true;
  
   }
   else{
-  digitalWrite(CalendarIncorrect, HIGH);
-  digitalWrite(CalendarCorrect, LOW);
+  digitalWrite(incorrect, HIGH);
+  digitalWrite(correct, LOW);
+  temp = correct;
+  temp = false;
+  
+  }
+  
+   // activacion del servo
+    if(temp == HIGH)
+  {
+    digitalWrite(servoActivo,HIGH);
+    posicion = 150;            // Establecemos el valor de la posicion a 150º  
+    posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
+    servo.write(posicion);                  // Escribimos la posicion con el mapa de valores al servo  
+    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
+
+  }else{
+   digitalWrite(servoActivo,LOW);
   
   }
   
   
   
-}
+  
+} // loop
 
 
- // THIS FUNCTION IS FOR magnetic sensor
-  bool myFunction(int x, int y){
-  if (x == HIGH || y == HIGH){
-  return true;
+ // THIS FUNCTION IS FOR HALL SENSOR
+  bool getHallValue(int x){
+    if (digitalRead(x)) return true;
+    else return false;
   }
   
-  else{
-   return false;
+  bool comparePairs(int x, int y)
+  {
+    if(getHallValue(x) == true || getHallValue(y) == true ) 
+    return true;
+    else 
+    return false;
   }
   
   
-  } // bool
   
