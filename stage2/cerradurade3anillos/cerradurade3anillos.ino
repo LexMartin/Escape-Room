@@ -1,135 +1,188 @@
-// PROYECTO CERRADURA DE 3 ANILLOS
-// Created by Cindy Canul Canul & Cristian Kumul Uc
-// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+#include <Servo.h>
+
+/*
+
+Automatizacion - cerradura de tres anillos
+Created by Cindy Canul Canul & Cristian Kumul Uc
+E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+*/
+
+// Variables, el numero descrito es el PIN a utilizar en la placa arduino.
+// El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
+
+
+int primerAgujero = 3;
+int segundoAgujero = 4;
+int tercerAgujero = 5; 
+int cuartoAgujero = 6; 
+int quintoAgujero = 7;
+int sextoAgujero = 8;
+int septimoAgujero = 24;
+int octavoAgujero = 10;
+int novenoAgujero = 11;
+int ceroAgujero = 12;
+
+// Estas son por seguridad, en caso de que las primeras partes no funcionen
+
+int primerAgujero1 = 13;
+int segundoAgujero2 = 14;
+int tercerAgujero3 = 15;
+int cuartoAgujero4 = 16;
+int quintoAgujero5 = 17;
+int sextoAgujero6 = 18;
+int septimoAgujero7 = 19;
+int octavoAgujero8 = 20;
+int novenoAgujero9 = 21;
+int ceroAgujero0 = 22;
+
+// validacion del juego
+int correct = 23;  
+int incorrect = 2; 
+
+// para servomotror
+Servo servo; // se crea un objeto servo
+int posicion; // posicion del servo
+int servoActivo = 9;
+
+//variables para guardar
+int temp = 0;
+int temp1 = 0;
+int temp2 = 0;
+int temp3 = 0;
+int temp4 = 0;
+int temp5 = 0;
+int temp6 = 0;
+int temp7 = 0;
+int temp8 = 0;
+int temp9 = 0;
+int temp0 = 0;
+
+int temp11 = 0;
+int temp22 = 0;
+int temp33 = 0;
+int temp44 = 0;
+int temp55 = 0;
+int temp66 = 0;
+int temp77 = 0;
+int temp88 = 0;
+int temp99 = 0;
+int temp00 = 0;
 
 
 
-
-//limite de entradas del arduino
-
-int NumbersCorrect = 13; 
-int NumbersIncorrect = 2;
-
-
-int NumberOne = 3;
-int NumberTwo = 5;
-int NumberThree = 7;
-int NumberFour = 9;
-int NumberFive = 11;
-int NumberSix = 13;
-int NumberSeven = 15;
-int NumberEight = 17;
-int NumberNine = 19;
-int NumberTen = 21;
-
-
-int OtherNumberOne = 4;
-int OtherNumberTwo = 6;
-int OtherNumberThree = 8;
-int OtherNumberFour = 10;
-int OtherNumberFive = 12;
-int OtherNumberSix = 14;
-int OtherNumberSeven = 16;
-int OtherNumberEight = 18;
-int OtherNumberNine = 20;
-int OtherNumberTen = 22;
-
-
-int variable1 = 0;
-int variable2 = 0;
-int variable3 = 0;
-int variable4 = 0;
-int variable5 = 0;
-int variable6 = 0;
-int variable7 = 0;
-int variable8 = 0;
-int variable9 = 0;
-int variable10 = 0;
-
-int variable11 = 0;
-int variable12 = 0;
-int variable13 = 0;
-int variable14 = 0;
-int variable15 = 0;
-int variable16 = 0;
-int variable17 = 0;
-int variable18 = 0;
-int variable19 = 0;
-int variable20 = 0;
-
+// INPUTS AND OUTPUTS, entradas y salidas
+// para declarar la entra o salida del PIN
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(NumbersCorrect, OUTPUT);  
-  pinMode(NumbersIncorrect, OUTPUT);    
-  pinMode(NumberOne, INPUT); 
-  pinMode(NumberTwo, INPUT); 
-  pinMode(NumberThree, INPUT); 
-  pinMode(NumberFour, INPUT); 
-  pinMode(NumberFive, INPUT); 
-  pinMode(NumberSix, INPUT); 
-  pinMode(NumberSeven, INPUT); 
-  pinMode(NumberEight, INPUT); 
-  pinMode(NumberNine, INPUT); 
-  pinMode(NumberTen, INPUT); 
+  // entrada
+  pinMode(primerAgujero, INPUT); 
+  pinMode(segundoAgujero, INPUT); 
+  pinMode(tercerAgujero, INPUT); 
+  pinMode(cuartoAgujero, INPUT); 
+  pinMode(quintoAgujero, INPUT); 
+  pinMode(sextoAgujero, INPUT); 
+  pinMode(septimoAgujero, INPUT); 
+  pinMode(octavoAgujero, INPUT); 
+  pinMode(novenoAgujero, INPUT); 
+  pinMode(ceroAgujero, INPUT); 
+  
+  pinMode(primerAgujero1, INPUT); 
+  pinMode(segundoAgujero2, INPUT); 
+  pinMode(tercerAgujero3, INPUT); 
+  pinMode(cuartoAgujero4, INPUT); 
+  pinMode(quintoAgujero5, INPUT); 
+  pinMode(sextoAgujero6, INPUT); 
+  pinMode(septimoAgujero7, INPUT); 
+  pinMode(octavoAgujero8, INPUT); 
+  pinMode(novenoAgujero9, INPUT); 
+  pinMode(ceroAgujero0, INPUT); 
+  
+  
+  
+  // salida
+  pinMode(correct, OUTPUT);  
+  pinMode(incorrect, OUTPUT); 
+  pinMode(servoActivo, OUTPUT);  
+  
+  
+    // servomotor
+  servo.attach(10); // seleccionamos el PIN a usar.
+  
+  
+  Serial.begin(9600); 
+  
 }
 
 
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
-  variable1 = digitalRead(NumberOne); 
-  variable2 = digitalRead(NumberTwo); 
-  variable3 = digitalRead(NumberThree); 
-  variable4 = digitalRead(NumberFour); 
-  variable5 = digitalRead(NumberFive); 
-  variable6 = digitalRead(NumberSix); 
-  variable7 = digitalRead(NumberSeven); 
-  variable8 = digitalRead(NumberEight); 
-  variable9 = digitalRead(NumberNine); 
-  variable10 = digitalRead(NumberTen); 
+  int temp1 = digitalRead(primerAgujero); 
+  int temp2 = digitalRead(segundoAgujero); 
+  int temp3 = digitalRead(tercerAgujero); 
+  int temp4 = digitalRead(cuartoAgujero); 
+  int temp5 = digitalRead(quintoAgujero); 
+  int temp6 = digitalRead(sextoAgujero); 
+  int temp7 = digitalRead(septimoAgujero); 
+  int temp8 = digitalRead(octavoAgujero); 
+  int temp9 = digitalRead(novenoAgujero); 
+  int temp0 = digitalRead(ceroAgujero); 
   
-  variable11 = digitalRead(OtherNumberOne); 
-  variable12 = digitalRead(OtherNumberTwo); 
-  variable13 = digitalRead(OtherNumberThree); 
-  variable14 = digitalRead(OtherNumberFour); 
-  variable15 = digitalRead(OtherNumberFive); 
-  variable16 = digitalRead(OtherNumberSix); 
-  variable17 = digitalRead(OtherNumberSeven); 
-  variable18 = digitalRead(OtherNumberEight); 
-  variable19 = digitalRead(OtherNumberNine); 
-  variable20 = digitalRead(OtherNumberTen); 
-
+  int temp11 = digitalRead(primerAgujero1); 
+  int temp22 = digitalRead(segundoAgujero2); 
+  int temp33 = digitalRead(tercerAgujero3); 
+  int temp44 = digitalRead(cuartoAgujero4); 
+  int temp55 = digitalRead(quintoAgujero5); 
+  int temp66 = digitalRead(sextoAgujero6); 
+  int temp77 = digitalRead(septimoAgujero7); 
+  int temp88 = digitalRead(octavoAgujero8); 
+  int temp99 = digitalRead(novenoAgujero9); 
+  int temp00 = digitalRead(ceroAgujero0); 
 
 
   
-  if(myFunction(NumberOne,OtherNumberOne) && myFunction(NumberTwo,OtherNumberTwo) && myFunction(NumberThree,OtherNumberThree) && myFunction(NumberFour,OtherNumberFour) && myFunction(NumberFive,OtherNumberFive) && 
-  myFunction(NumberSix,OtherNumberSix) && myFunction(NumberSeven,OtherNumberSeven) && myFunction(NumberEight,OtherNumberEight) && myFunction(NumberNine,OtherNumberNine) && myFunction(NumberTen,OtherNumberTen)  ){
-  digitalWrite(NumbersCorrect, HIGH);
-  digitalWrite(NumbersIncorrect, LOW);
-  
+  if(comparePairs(primerAgujero,primerAgujero1) && comparePairs(segundoAgujero,segundoAgujero2)
+  && comparePairs(tercerAgujero,tercerAgujero3) && comparePairs(cuartoAgujero,cuartoAgujero4) 
+  && comparePairs(quintoAgujero,quintoAgujero5) && comparePairs(sextoAgujero,sextoAgujero6) 
+  && comparePairs(septimoAgujero,septimoAgujero7) && comparePairs(octavoAgujero,octavoAgujero8) 
+  && comparePairs(novenoAgujero,novenoAgujero9) && comparePairs(ceroAgujero,ceroAgujero0)  )
+  {
+  digitalWrite(correct, HIGH);
+  digitalWrite(incorrect, LOW);
+  temp = correct;
+  temp = true;
   }
   else{
-  digitalWrite(NumbersIncorrect, HIGH);
-  digitalWrite(NumbersCorrect, LOW);
+  digitalWrite(correct, LOW);
+  digitalWrite(incorrect, HIGH);
+  temp = correct;
+  temp = false;
+  }
+  // activacion del servo
+    if(temp == HIGH)
+  {
+    digitalWrite(servoActivo,HIGH);
+    posicion = 150;            // Establecemos el valor de la posicion a 150º  
+    posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
+    servo.write(posicion);                  // Escribimos la posicion con el mapa de valores al servo  
+    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
 
+  }else{
+   digitalWrite(servoActivo,LOW);
   
   }
-  
-  
-  
-}
+ }  //loop
 
- // THIS FUNCTION IS FOR magnetic sensor
-  bool myFunction(int x, int y){
-  if (x == HIGH || y == HIGH){
-  return true;
+  // THIS FUNCTION IS FOR HALL SENSOR
+  bool getHallValue(int x){
+    if (digitalRead(x)) return true;
+    else return false;
   }
   
-  else{
-   return false;
+  bool comparePairs(int x, int y)
+  {
+    if(getHallValue(x) == true || getHallValue(y) == true ) 
+    return true;
+    else 
+    return false;
   }
   
-  
-  } // bool

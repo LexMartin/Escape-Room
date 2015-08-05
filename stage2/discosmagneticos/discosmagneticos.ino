@@ -1,127 +1,160 @@
-// DISCOS MAGNETICOS
-// Created by Cindy Canul Canul & Cristian Kumul Uc
-// E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+#include <Servo.h>
+
+/*
+
+Automatizacion - discos magneticos
+Created by Cindy Canul Canul & Cristian Kumul Uc
+E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
+*/
 
 
-int CorrectPoints = 13; 
-int IncorrectPoints = 2;
+// Variables, el numero descrito es el PIN a utilizar en la placa arduino.
+// El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
-int PointOne = 3;
-int PointTwo = 5;
-int PointThree = 7;
-int PointFour = 9;
-int PointFive = 11;
-int PointFix = 14;
-int PointSeven = 16;
-int PointEight = 18;
+int puntoUno = 3;
+int puntoDos = 4;
+int puntoTres = 5;
+int puntoCuatro = 6;
+int puntoCinco = 7;
+int puntoSeis = 8;
+int puntoSiete = 9;
+int puntoOcho = 10;
 
-int OtherPointOne = 4;
-int OtherPointTwo = 6;
-int OtherPointThree = 8;
-int OtherPointFour = 10;
-int OtherPointFive = 12;
-int OtherPointFix = 15;
-int OtherPointSeven = 17;
-int OtherPointEight = 19;
+// Estas son por seguridad, en caso de que las primeras partes no funcionen
+int puntoUno1 = 11;
+int puntoDos2 = 12;
+int puntoTres3 = 13;
+int puntoCuatro4 = 14;
+int puntoCinco5 = 15;
+int puntoSeis6 = 16;
+int puntoSiete7 = 17;
+int puntoOcho8 = 18;
 
-int variable1 = 0;
-int variable2 = 0;
-int variable3 = 0;
-int variable4 = 0;
-int variable5 = 0;
-int variable6 = 0;
-int variable7 = 0;
-int variable8 = 0;
+// validacion del juego
+int correct = 19;  // Cuando las tres partes del totem estan correctas
+int incorrect = 20; // el juego es incorrecto
 
-int variable9 = 0;
-int variable10 = 0;
-int variable11 = 0;
-int variable12 = 0;
-int variable13 = 0;
-int variable14 = 0;
-int variable15 = 0;
-int variable16 = 0;
 
+// para servomotror
+Servo servo; // se crea un objeto servo
+int posicion; // posicion del servo
+int servoActivo = 21;
+
+//variables para guardar
+int temp = 0;
+int temp1 = 0;
+int temp2 = 0;
+int temp3 = 0;
+int temp4 = 0;
+int temp5 = 0;
+int temp6 = 0;
+int temp7 = 0;
+int temp8 = 0;
+
+
+int temp9 = 0;
+int temp10 = 0;
+int temp11 = 0;
+int temp12 = 0;
+int temp13 = 0;
+int temp14 = 0;
+int temp15 = 0;
+int temp16 = 0;
+
+
+// INPUTS AND OUTPUTS, entradas y salidas
+// para declarar la entra o salida del PIN
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(CorrectPoints, OUTPUT);  
-  pinMode(IncorrectPoints, OUTPUT);  
-  pinMode(PointOne, INPUT); 
-  pinMode(PointTwo, INPUT); 
-  pinMode(PointThree, INPUT); 
-  pinMode(PointFour, INPUT); 
-  pinMode(PointFive, INPUT); 
-  pinMode(PointFix, INPUT); 
-  pinMode(PointSeven, INPUT); 
-  pinMode(PointEight, INPUT); 
-  
-  pinMode(OtherPointOne, INPUT); 
-  pinMode(OtherPointTwo, INPUT); 
-  pinMode(OtherPointThree, INPUT); 
-  pinMode(OtherPointFour, INPUT); 
-  pinMode(OtherPointFive, INPUT); 
-  pinMode(OtherPointFix, INPUT); 
-  pinMode(OtherPointSeven, INPUT); 
-  pinMode(OtherPointEight, INPUT); 
-  
-  
+  // entrada
 
+  pinMode(puntoUno, INPUT); 
+  pinMode(puntoDos, INPUT); 
+  pinMode(puntoTres, INPUT); 
+  pinMode(puntoCuatro, INPUT); 
+  pinMode(puntoCinco, INPUT); 
+  pinMode(puntoSeis, INPUT); 
+  pinMode(puntoSiete, INPUT); 
+  pinMode(puntoOcho, INPUT); 
+  
+  pinMode(puntoUno1, INPUT); 
+  pinMode(puntoDos2, INPUT); 
+  pinMode(puntoTres3, INPUT); 
+  pinMode(puntoCuatro4, INPUT); 
+  pinMode(puntoCinco5, INPUT); 
+  pinMode(puntoSeis6, INPUT); 
+  pinMode(puntoSiete7, INPUT); 
+  pinMode(puntoOcho8, INPUT);
+ 
+  //salida
+  
+  pinMode(correct, OUTPUT);  
+  pinMode(incorrect, OUTPUT);  
+  pinMode(servoActivo, OUTPUT);     
+  
+  // servomotor
+  servo.attach(10); // seleccionamos el PIN a usar.
+  
+  
+  Serial.begin(9600); 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  variable1 = digitalRead(PointOne); 
-  variable2 = digitalRead(PointTwo); 
-  variable3 = digitalRead(PointThree); 
-  variable4 = digitalRead(PointFour); 
-  variable5 = digitalRead(PointFive); 
-  variable6 = digitalRead(PointFix); 
-  variable7 = digitalRead(PointSeven); 
-  variable8 = digitalRead(PointEight); 
+  temp1 = digitalRead(puntoUno); 
+  temp2 = digitalRead(puntoDos); 
+  temp3 = digitalRead(puntoTres); 
+  temp4 = digitalRead(puntoCuatro); 
+  temp5 = digitalRead(puntoCinco); 
+  temp6 = digitalRead(puntoSeis); 
+  temp7 = digitalRead(puntoSiete); 
+  temp8 = digitalRead(puntoOcho); 
   
-  variable9 = digitalRead(OtherPointOne); 
-  variable10 = digitalRead(OtherPointTwo); 
-  variable11 = digitalRead(OtherPointThree); 
-  variable12 = digitalRead(OtherPointFour); 
-  variable13 = digitalRead(OtherPointFive); 
-  variable14 = digitalRead(OtherPointFix); 
-  variable15 = digitalRead(OtherPointSeven); 
-  variable16 = digitalRead(OtherPointEight); 
+  temp9 = digitalRead(puntoUno1); 
+  temp10 = digitalRead(puntoDos2); 
+  temp11 = digitalRead(puntoTres3); 
+  temp12 = digitalRead(puntoCuatro4); 
+  temp13 = digitalRead(puntoCinco5); 
+  temp14 = digitalRead(puntoSeis6); 
+  temp15 = digitalRead(puntoSiete7); 
+  temp16 = digitalRead(puntoOcho8); 
   
-
-
-  
-
-
-  
-  if(myFunction(PointOne,OtherPointOne) && myFunction(PointTwo,OtherPointTwo) && myFunction(PointThree,OtherPointThree) && myFunction(PointFour,OtherPointFour) 
-  && myFunction(PointFive,OtherPointFive) && myFunction(PointFix,OtherPointFix) && myFunction(PointSeven,OtherPointSeven) && myFunction(PointEight,OtherPointEight)){
-  digitalWrite(CorrectPoints, HIGH);
-  digitalWrite(IncorrectPoints, LOW);
-  
+  if(comparePairs(puntoUno,puntoUno1) && comparePairs(puntoDos,puntoDos2) && comparePairs(puntoTres,puntoTres3) && comparePairs(puntoCuatro,puntoCuatro4) 
+  && comparePairs(puntoCinco,puntoCinco5) && comparePairs(puntoSeis,puntoSeis6) && comparePairs(puntoSiete,puntoSiete7) && comparePairs(puntoOcho,puntoOcho8)){
+  digitalWrite(correct, HIGH);
+  digitalWrite(incorrect, LOW);
+  temp = correct;
+  temp = true;
   }
   else{
-  digitalWrite(IncorrectPoints, HIGH);
-  digitalWrite(CorrectPoints, LOW);
+  digitalWrite(correct, LOW);
+  digitalWrite(incorrect, HIGH);
+  temp = correct;
+  temp = false;
+  }  
+  // activacion del servo
+    if(temp == HIGH)
+  {
+    digitalWrite(servoActivo,HIGH);
+    posicion = 150;            // Establecemos el valor de la posicion a 150º  
+    posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
+    servo.write(posicion);                  // Escribimos la posicion con el mapa de valores al servo  
+    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
 
+  }else{
+   digitalWrite(servoActivo,LOW);
   
   }
-  
-  
-  
-}
-
-
- // THIS FUNCTION IS FOR magnetic sensor
-  bool myFunction(int x, int y){
-  if (x == HIGH || y == HIGH){
-  return true;
+ }  //loop
+ 
+ // THIS FUNCTION IS FOR HALL SENSOR
+  bool getHallValue(int x){
+    if (digitalRead(x)) return true;
+    else return false;
   }
-  
-  else{
-   return false;
+  bool comparePairs(int x, int y)
+  {
+    if(getHallValue(x) == true || getHallValue(y) == true ) 
+    return true;
+    else 
+    return false;
   }
-  
-  
-  } // bool

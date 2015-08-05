@@ -1,0 +1,3 @@
+infrarrojo	KEYWORD1
+lectura	KEYWORD2
+Palabra2	KEYWORD3
