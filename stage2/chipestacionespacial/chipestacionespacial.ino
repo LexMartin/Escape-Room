@@ -29,8 +29,8 @@ int incorrect = 8;
 
 // para servomotror
 Servo servo; // se crea un objeto servo
-int posicion; // posicion del servo
-int servoActivo = 9;
+int posicion =0; // posicion del servo
+//int servoActivo = 9;
 
 //variables para guardar
 int temp = 0;
@@ -89,15 +89,15 @@ void loop() {
   }
     if(temp == HIGH)
   {
-    digitalWrite(servoActivo,HIGH);
-    posicion = 150;            // Establecemos el valor de la posicion a 150º  
-    posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
-    servo.write(posicion);                  // Escribimos la posicion con el mapa de valores al servo  
+    //digitalWrite(servoActivo,HIGH);
+    //posicion = 150;            // Establecemos el valor de la posicion a 150º  
+    //posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
+    servo.write(90);                  // Escribimos la posicion con el mapa de valores al servo  
     delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
 
   }else{
-   digitalWrite(servoActivo,LOW);
-  
+   //digitalWrite(servoActivo,LOW);
+    servo.write(0);  
   }
   
   
