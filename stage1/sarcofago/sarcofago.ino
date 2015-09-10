@@ -7,6 +7,35 @@ Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
+
+/* MATERIALES
+2 ARDUINOS
+12 SENSORES HALL
+2 LEDS
+2 SERVOMOTORES
+2 CIRCUITOS MOSFET
+
+*/
+
+
+/* CABLES
+#CABLES | #HILOS | 
+  12        3      para sensores hall (la parte A0 no se usa por eso son tres hilos por cable)
+  2         2      para los leds
+  2         3      para los circuitos mosfet
+
+
+
+*Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
+*El servo motor necesita cables para una fuente de poder
+
+
+*/
+
+
+
+
+
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
@@ -63,7 +92,7 @@ void setup() {
  //salida
   pinMode(correct, OUTPUT);  
   pinMode(incorrect, OUTPUT); 
-  pinMode(servoActivo, OUTPUT);  
+  //pinMode(servoActivo, OUTPUT);  
   
   // servomotor
   servo.attach(10); // seleccionamos el PIN a usar.
@@ -91,19 +120,19 @@ void loop() {
   if(comparePairs(placaColorAmarillo,placaColorAmarillo1) && comparePairs(placaColorNaranja,placaColorNaranja2) && comparePairs(placaColorRojo,placaColorRojo3) ){
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
-  temp = correct;
+  //temp = correct;
   temp = true;
   }
   else{
   digitalWrite(incorrect, HIGH);
   digitalWrite(correct, LOW);
-  temp = correct;
+  //temp = correct;
   temp = false;
   }
  
  
  // activacion del servo
-    if(temp == HIGH)
+    if(temp)
   {
     //digitalWrite(servoActivo,HIGH);
     //posicion = 150;            // Establecemos el valor de la posicion a 150º  

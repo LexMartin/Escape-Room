@@ -6,16 +6,43 @@ Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
+
+/* MATERIALES
+1 ARDUINO UNO
+1 SERVOMOTOR
+1 CIRCUITO MOSFET
+2 LEDS
+6 SENSORES HALL
+*/
+
+/*  CABLES
+#CABLES | #HILOS | 
+  1          3     para circuito mosfet
+  1          2     para los leds
+  6          3     para sensores hall (la parte A0 no se usa por eso son tres hilos por cable)
+  
+  
+*Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
+*El servo motor necesita cables para una fuente de poder
+  
+*/
+
+
+
+
+
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
 int primerAnillo = 2; // primer anillo
 int segundoAnillo = 3; // segungo anillo
+int tercerAnillo = 4;
 
 // Estas son por seguridad, en caso de que las primeras partes no funcionen
 
-int primerAnillo1 = 4;
-int segundoAnillo2 = 5;
+int primerAnillo1 = 5;
+int segundoAnillo2 = 6;
+int tercerAnillo3 = 7;
 
 //validacion del juego
 int correct = 13;
@@ -32,6 +59,9 @@ int temp1 = 0;
 int temp2 = 0;
 int temp3 = 0;
 int temp4 = 0;
+int temp5 = 0;
+int temp6 = 0;
+
 int temp = 0;
 
 
@@ -43,10 +73,11 @@ void setup() {
   //entradas
   pinMode(primerAnillo, INPUT);
   pinMode(segundoAnillo, INPUT);
-  
+  pinMode(tercerAnillo, INPUT);
   
   pinMode(primerAnillo1, INPUT);
   pinMode(segundoAnillo2, INPUT);
+  pinMode(tercerAnillo3, INPUT);
   
   // salidas
   pinMode(correct, OUTPUT);  
@@ -67,29 +98,29 @@ void loop() {
   temp2 = digitalRead(segundoAnillo);
 
   
-  temp3 = digitalRead(primerAnillo1); 
-  temp4 = digitalRead(segundoAnillo2);   
+  temp3 = digitalRead(tercerAnillo); 
+  temp4 = digitalRead(primerAnillo1);   
  
- 
- 
+  temp5 = digitalRead(segundoAnillo2);  
+  temp6 = digitalRead(tercerAnillo3); 
   
-  if(comparePairs(primerAnillo,primerAnillo1) && comparePairs(segundoAnillo,segundoAnillo2) ){
+  if(comparePairs(primerAnillo,primerAnillo1) && comparePairs(segundoAnillo,segundoAnillo2) && comparePairs(tercerAnillo,tercerAnillo3) ){
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
-  temp = correct;
+  //temp = correct;
   temp = true;
  
   }
   else{
   digitalWrite(incorrect, HIGH);
   digitalWrite(correct, LOW);
-  temp = correct;
+  //temp = correct;
   temp = false;
   
   }
   
    // activacion del servo
-    if(temp == HIGH)
+    if(temp)
   {
     //digitalWrite(servoActivo,HIGH);
     //posicion = 150;            // Establecemos el valor de la posicion a 150º  

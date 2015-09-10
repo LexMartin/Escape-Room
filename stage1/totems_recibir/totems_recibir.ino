@@ -1,4 +1,3 @@
-#include <Servo.h>
 
 /*
 
@@ -17,13 +16,12 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
 /*  CABLES
-
-
 #CABLES | #HILOS | 
   24        3      para sensores hall
   3         3      para circuito mosfet
   1         3      para el laser
   9         2      para los leds
+
 
   
 *Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
@@ -36,38 +34,37 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 
 
 
-int totemPartOne = 2; // Parte uno del totem
-int totemPartTwo = 3; // parte dos
-int totemPartThree = 4; // parte tres
+int totemPartOne = 0; // Parte uno del totem
+int totemPartTwo = 1; // parte dos
+int totemPartThree = 2; // parte tres
 
 // Estas son por seguridad, en caso de que las primeras partes no funcionen
 
-int totemPart1 = 5; // respaldo de parte uno del totem
-int totemPart2  = 6; // respaldo parte dos
-int totemPart3 = 7;  // respaldo parte tres
+int totemPart1 = 3; // respaldo de parte uno del totem
+int totemPart2  = 4; // respaldo parte dos
+int totemPart3 = 5;  // respaldo parte tres
 
 // validacion del juego
-int correct = 13;  // Cuando las tres partes del totem estan correctas
+int correct = 6;
+int correct2 = 7; // Cuando las tres partes del totem estan correctas
 int incorrect = 8; // el juego es incorrecto
 
+// RECIBIR
+const int arduinoUnoCorrecto = 9;
+const int arduinoDosCorrecto = 10;
+const int arduinoTresCorrecto = 11;
 
-int servo = 11;
+int recibirArduinoUnoCorrecto; 
+int recibirArduinoDosCorrecto; 
+int recibirArduinoTresCorrecto; 
 
 // ENVIAR
-const int arduinoUnoCorrecto = 9;
+const int enviarArduinoCuatroUnoCorrecto = 12;
+const int enviarArduinoCuatroDosCorrecto = 13;
+const int enviarArduinoCuatroTresCorrecto = 14;
 
-// RECIBIR
-const int enviarArduinoCuatroCorrecto = 10;
+int laser = 15;
 
-
-int recibirEnviarArduinoCuatroUnoCorrecto; 
-
-/*
-// para servomotror
-Servo servo; // se crea un objeto servo
-int posicion = 0; // posicion del servo
-//int servoActivo = 9;
-*/
 //variables para guardar
 int temp = 0;
 int temp1 = 0;
@@ -90,26 +87,31 @@ void setup() {
   
   pinMode(totemPart1, INPUT); 
   pinMode(totemPart2, INPUT); 
- 
- 
-  
+  pinMode(totemPart3, INPUT); 
  
   // salidas
-  pinMode(correct, OUTPUT);  
+  pinMode(correct, OUTPUT);
+  pinMode(correct2, OUTPUT);
+  
   pinMode(incorrect, OUTPUT); 
+  
+  
+  pinMode(arduinoUnoCorrecto, INPUT);
+  pinMode(arduinoDosCorrecto, INPUT);
+  pinMode(arduinoTresCorrecto, INPUT);
  
+  
+  pinMode(enviarArduinoCuatroUnoCorrecto, OUTPUT); 
+  pinMode(enviarArduinoCuatroDosCorrecto, OUTPUT); 
+  pinMode(enviarArduinoCuatroTresCorrecto, OUTPUT); 
   //pinMode(servoActivo, OUTPUT);     
-  
-  
-  // ENVIAR RECIBIR
-  pinMode(enviarArduinoCuatroCorrecto, INPUT); 
-  pinMode(arduinoUnoCorrecto, OUTPUT); 
-  
+  pinMode(laser,OUTPUT);
   // servomotor
-  //servo.attach(11); // seleccionamos el PIN a usar.
-  pinMode(servo,OUTPUT);
+
+  //servo.attach(9); // seleccionamos el PIN a usar.
   
-  Serial.begin(9600); 
+  
+  //Serial.begin(9600); 
 }
 
  
@@ -121,25 +123,38 @@ void loop() {
   temp3 = digitalRead(totemPartThree);         temp6 = digitalRead(totemPart3);  
  
  
-  if( (comparePairs(totemPartOne,totemPart1)) )
-  //&& (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
+  if( (comparePairs(totemPartOne,totemPart1)))
+ // && (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
   {
-  digitalWrite(correct, HIGH);
+  digitalWrite(correct, LOW);
+  digitalWrite(correct2, LOW);
   digitalWrite(incorrect, LOW);
-  digitalWrite(arduinoUnoCorrecto,HIGH);
-  digitalWrite(servo,LOW);
-  recibirEnviarArduinoCuatroUnoCorrecto = digitalRead(enviarArduinoCuatroCorrecto);
-  if (recibirEnviarArduinoCuatroUnoCorrecto == HIGH){
-     //temp = correct;
-     digitalWrite(servo,HIGH);
-     
-     //temp = true;
+  recibirArduinoUnoCorrecto = digitalRead(arduinoUnoCorrecto);
+  recibirArduinoDosCorrecto = digitalRead(arduinoDosCorrecto);
+  recibirArduinoTresCorrecto = digitalRead(arduinoTresCorrecto);
+  
+  
+
+  
+  if (recibirArduinoUnoCorrecto == HIGH && recibirArduinoDosCorrecto == HIGH && recibirArduinoTresCorrecto== HIGH) {
+   digitalWrite(enviarArduinoCuatroUnoCorrecto, HIGH);
+   digitalWrite(enviarArduinoCuatroDosCorrecto, HIGH);
+   digitalWrite(enviarArduinoCuatroTresCorrecto, HIGH);
+   digitalWrite(correct, HIGH);
+   digitalWrite(correct2, HIGH);
+   digitalWrite(laser,HIGH);
+   
+   
   }
-  else if (recibirEnviarArduinoCuatroUnoCorrecto == LOW){
-      
-     //temp = correct;
-     //temp = false;
-      digitalWrite(servo,LOW);
+  else{
+ 
+  digitalWrite(enviarArduinoCuatroUnoCorrecto, LOW);
+   digitalWrite(enviarArduinoCuatroDosCorrecto, LOW);
+   digitalWrite(enviarArduinoCuatroTresCorrecto, LOW);
+   digitalWrite(correct, LOW);
+   digitalWrite(correct2, LOW);
+   digitalWrite(laser,LOW);
+  
   }
   
   //temp = correct;
@@ -148,9 +163,9 @@ void loop() {
   }
   else{
   digitalWrite(correct, LOW);
+  digitalWrite(correct2, LOW);
   digitalWrite(incorrect, HIGH);
-  digitalWrite(arduinoUnoCorrecto,LOW);
-  digitalWrite(servo,LOW);
+  
   //temp = correct;
   //temp = false;
  
@@ -159,7 +174,7 @@ void loop() {
   }
   //Serial.println(comparePairs(ValTotem,OtherValTotem));
   
- /* 
+  /* 
   // activacion del servo
     if(temp == HIGH)
   {
@@ -169,13 +184,13 @@ void loop() {
     servo.write(90);                  // Escribimos la posicion con el mapa de valores al servo  
     delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
 
-  }else if(temp == LOW){
+  }else{
    //digitalWrite(servoActivo,LOW);
    servo.write(0);
   
   }
-  
   */
+  
   
  }  //loop
  

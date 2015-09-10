@@ -9,6 +9,27 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
 
+/* MATERIALES
+8 FOTORESISTENCIAS 
+1 ARDUINO UNO
+1 SERVOMOTOR
+1 CIRCUITO MOSFET
+2 LEDS
+*/
+
+/*  CABLES
+#CABLES | #HILOS | 
+  8          3     para fotoresistencias
+  1          3     para circuito mosfet
+  2          2     para los leds
+  
+  
+*Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
+*El servo motor necesita cables para una fuente de poder
+  
+*/
+
+
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
@@ -19,10 +40,12 @@ int puntoCuatro = 5;
 
 // Estas son por seguridad, en caso de que las primeras partes no funcionen
 
+
 int puntoUno1 = 6;
 int puntoDos2 = 7;
 int puntoTres3 = 8;
 int puntoCuatro4 = 9;
+
 
 // validacion del juego
 int correct = 13;  
@@ -57,6 +80,7 @@ void setup() {
   pinMode(puntoTres, INPUT); 
   pinMode(puntoCuatro, INPUT); 
   
+  
   pinMode(puntoUno1, INPUT); 
   pinMode(puntoDos2, INPUT); 
   pinMode(puntoTres3, INPUT); 
@@ -66,10 +90,10 @@ void setup() {
   // salidas
   pinMode(correct, OUTPUT);  
   pinMode(incorrect, OUTPUT); 
-  pinMode(servoActivo, OUTPUT);     
+  //pinMode(servoActivo, OUTPUT);     
   
   // servomotor
-  servo.attach(10); // seleccionamos el PIN a usar.
+  servo.attach(11); // PIN PARA EL SERVOMOTOR
   
   
   Serial.begin(9600); 
@@ -81,18 +105,27 @@ void setup() {
 void loop() {
   
   
-  temp1 = digitalRead(puntoUno);           temp5 = digitalRead(puntoUno1);  
-  temp2 = digitalRead(puntoDos);           temp6 = digitalRead(puntoDos2);  
-  temp3 = digitalRead(puntoTres);           temp7 = digitalRead(puntoTres3); 
-   temp4 = digitalRead(puntoCuatro);           temp8 = digitalRead(puntoCuatro4);  
+  temp1 = digitalRead(puntoUno);          
+  temp2 = digitalRead(puntoDos);       
+  temp3 = digitalRead(puntoTres);         
+   temp4 = digitalRead(puntoCuatro);      
  
+/*
+ temp5 = digitalRead(puntoUno1);  
+      temp6 = digitalRead(puntoDos2);  
+        temp7 = digitalRead(puntoTres3); 
+             temp8 = digitalRead(puntoCuatro4);  */
 
+// Descomentar la linea siguiente si el juego requiere que los 4 puntos tengan un respaldo, necesitara usar 8 fotoresistencias 
+// el IF compara por medio de un or para asegurarse 
+if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4))){
   
-if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4)))
-  {
+  
+// en esta caso el juego solo tiene 4 fotoresistencias que son los 4 puntos de la puerta de salida  
+ // if( getHallValue(puntoUno) && getHallValue(puntoDos) && getHallValue(puntoTres) && getHallValue(puntoCuatro))  {
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
-  temp = correct;
+  //temp = correct;
   temp = true;
   /*
   if(temp)
@@ -106,7 +139,7 @@ if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && 
   else{
   digitalWrite(correct, LOW);
   digitalWrite(incorrect, HIGH);
-  temp = correct;
+  //temp = correct;
   temp = false;
  
   
@@ -117,7 +150,7 @@ if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && 
   
   
   // activacion del servo
-    if(temp == HIGH)
+    if(temp)
   {
     //digitalWrite(servoActivo,HIGH);
     //posicion = 150;            // Establecemos el valor de la posicion a 150º  
@@ -135,10 +168,10 @@ if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && 
  }  //loop
  
  
- // THIS FUNCTION IS FOR HALL SENSOR
+ // para las fotoresistencias
   bool getHallValue(int x){
-    if (digitalRead(x)) return true;
-    else return false;
+    if (digitalRead(x)) return false;
+    else return true;
   }
   
   bool comparePairs(int x, int y)
