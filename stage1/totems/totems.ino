@@ -47,27 +47,28 @@ int totemPart2  = 6; // respaldo parte dos
 int totemPart3 = 7;  // respaldo parte tres
 
 // validacion del juego
-int correct = 13;  // Cuando las tres partes del totem estan correctas
-int incorrect = 8; // el juego es incorrecto
+int correct = 8;  // Cuando las tres partes del totem estan correctas
+int incorrect = 9; // el juego es incorrecto
 
 
-int servo = 11;
+//int servo;
 
 // ENVIAR
-const int arduinoUnoCorrecto = 9;
+const int arduinoUnoCorrecto = 10;
 
 // RECIBIR
-const int enviarArduinoCuatroCorrecto = 10;
+const int enviarArduinoCuatroCorrecto = 11;
 
 
 int recibirEnviarArduinoCuatroUnoCorrecto; 
 
-/*
+
 // para servomotror
 Servo servo; // se crea un objeto servo
 int posicion = 0; // posicion del servo
-//int servoActivo = 9;
-*/
+//int temp = 0;
+
+
 //variables para guardar
 int temp = 0;
 int temp1 = 0;
@@ -97,17 +98,15 @@ void setup() {
   // salidas
   pinMode(correct, OUTPUT);  
   pinMode(incorrect, OUTPUT); 
- 
-  //pinMode(servoActivo, OUTPUT);     
-  
+    
   
   // ENVIAR RECIBIR
   pinMode(enviarArduinoCuatroCorrecto, INPUT); 
   pinMode(arduinoUnoCorrecto, OUTPUT); 
   
   // servomotor
-  //servo.attach(11); // seleccionamos el PIN a usar.
-  pinMode(servo,OUTPUT);
+  servo.attach(12); // seleccionamos el PIN a usar.
+
   
   Serial.begin(9600); 
 }
@@ -121,61 +120,38 @@ void loop() {
   temp3 = digitalRead(totemPartThree);         temp6 = digitalRead(totemPart3);  
  
  
-  if( (comparePairs(totemPartOne,totemPart1)) )
-  //&& (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
+  if( (comparePairs(totemPartOne,totemPart1)) && (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
   {
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
   digitalWrite(arduinoUnoCorrecto,HIGH);
-  digitalWrite(servo,LOW);
   recibirEnviarArduinoCuatroUnoCorrecto = digitalRead(enviarArduinoCuatroCorrecto);
   if (recibirEnviarArduinoCuatroUnoCorrecto == HIGH){
-     //temp = correct;
-     digitalWrite(servo,HIGH);
-     
-     //temp = true;
+      temp = true;
   }
   else if (recibirEnviarArduinoCuatroUnoCorrecto == LOW){
-      
-     //temp = correct;
-     //temp = false;
-      digitalWrite(servo,LOW);
-  }
-  
-  //temp = correct;
-  //temp = true;
-  
+     temp = false;
+  }  
   }
   else{
   digitalWrite(correct, LOW);
   digitalWrite(incorrect, HIGH);
   digitalWrite(arduinoUnoCorrecto,LOW);
-  digitalWrite(servo,LOW);
-  //temp = correct;
-  //temp = false;
- 
-  
-  
   }
-  //Serial.println(comparePairs(ValTotem,OtherValTotem));
-  
- /* 
+   
   // activacion del servo
     if(temp == HIGH)
   {
-    //digitalWrite(servoActivo,HIGH);
-    //posicion = 150;            // Establecemos el valor de la posicion a 150º  
-    //posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
+    delay(5000);
     servo.write(90);                  // Escribimos la posicion con el mapa de valores al servo  
     delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
 
   }else if(temp == LOW){
-   //digitalWrite(servoActivo,LOW);
-   servo.write(0);
+    servo.write(0);
   
   }
   
-  */
+ 
   
  }  //loop
  

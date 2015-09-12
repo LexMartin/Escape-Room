@@ -1,3 +1,6 @@
+#include <gpio_expander.h>
+#include <Wire.h>
+#include <pca9555.h>
 
 /*
 
@@ -32,41 +35,28 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
 
+pca9555 gpio1(0x20);
 
-
-int totemPartOne = 0; // Parte uno del totem
-int totemPartTwo = 1; // parte dos
-int totemPartThree = 2; // parte tres
+int totemPartOne = 2; // Parte uno del totem
+int totemPartTwo = 3; // parte dos
+int totemPartThree = 4; // parte tres
 
 // Estas son por seguridad, en caso de que las primeras partes no funcionen
 
-int totemPart1 = 3; // respaldo de parte uno del totem
-int totemPart2  = 4; // respaldo parte dos
-int totemPart3 = 5;  // respaldo parte tres
+int totemPart1 = 5; // respaldo de parte uno del totem
+int totemPart2  = 6; // respaldo parte dos
+int totemPart3 = 7;  // respaldo parte tres
 
 // validacion del juego
-int correct = 6;
-int correct2 = 7; // Cuando las tres partes del totem estan correctas
-int incorrect = 8; // el juego es incorrecto
+int correct = 8; // Cuando las tres partes del totem estan correctas
+int incorrect = 9; // el juego es incorrecto
+int ojos1 = 10; 
+int ojos2 = 11;
 
-// RECIBIR
-const int arduinoUnoCorrecto = 9;
-const int arduinoDosCorrecto = 10;
-const int arduinoTresCorrecto = 11;
-
-int recibirArduinoUnoCorrecto; 
-int recibirArduinoDosCorrecto; 
-int recibirArduinoTresCorrecto; 
-
-// ENVIAR
-const int enviarArduinoCuatroUnoCorrecto = 12;
-const int enviarArduinoCuatroDosCorrecto = 13;
-const int enviarArduinoCuatroTresCorrecto = 14;
-
-int laser = 15;
+int laser = 12;
 
 //variables para guardar
-int temp = 0;
+//int temp = 0;
 int temp1 = 0;
 int temp2 = 0;
 int temp3 = 0;
@@ -79,8 +69,19 @@ int temp6 = 0;
 // para declarar la entra o salida del PIN
 void setup() {
   // entradas
- 
-  
+   Serial.begin(38400);
+   delay(100);
+   gpio1.begin();
+   
+   
+   for(int i=0;i<=15;i++){
+    if(i < 3){
+      gpio1.gpioPinMode(i,INPUT);
+    }else if(i >= 3 && i< 6){
+      gpio1.gpioPinMode(i,OUTPUT); 
+    }   
+    
+   } 
   pinMode(totemPartOne, INPUT); 
   pinMode(totemPartTwo, INPUT); 
   pinMode(totemPartThree, INPUT); 
@@ -91,109 +92,71 @@ void setup() {
  
   // salidas
   pinMode(correct, OUTPUT);
-  pinMode(correct2, OUTPUT);
-  
   pinMode(incorrect, OUTPUT); 
   
+  pinMode(ojos1, OUTPUT);
+  pinMode(ojos2, OUTPUT);
   
-  pinMode(arduinoUnoCorrecto, INPUT);
-  pinMode(arduinoDosCorrecto, INPUT);
-  pinMode(arduinoTresCorrecto, INPUT);
- 
-  
-  pinMode(enviarArduinoCuatroUnoCorrecto, OUTPUT); 
-  pinMode(enviarArduinoCuatroDosCorrecto, OUTPUT); 
-  pinMode(enviarArduinoCuatroTresCorrecto, OUTPUT); 
-  //pinMode(servoActivo, OUTPUT);     
   pinMode(laser,OUTPUT);
-  // servomotor
-
-  //servo.attach(9); // seleccionamos el PIN a usar.
-  
-  
-  //Serial.begin(9600); 
 }
-
- 
-void loop() {
   
-
+void loop() {
   temp1 = digitalRead(totemPartOne);           temp4 = digitalRead(totemPart1);  
   temp2 = digitalRead(totemPartTwo);           temp5 = digitalRead(totemPart2);  
   temp3 = digitalRead(totemPartThree);         temp6 = digitalRead(totemPart3);  
- 
- 
-  if( (comparePairs(totemPartOne,totemPart1)))
- // && (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
+
+  if( (comparePairs(totemPartOne,totemPart1)) && (comparePairs(totemPartTwo,totemPart2)) && (comparePairs(totemPartThree,totemPart3)))
   {
-  digitalWrite(correct, LOW);
-  digitalWrite(correct2, LOW);
+  digitalWrite(correct, HIGH);
+  //digitalWrite(correct2, LOW);
   digitalWrite(incorrect, LOW);
-  recibirArduinoUnoCorrecto = digitalRead(arduinoUnoCorrecto);
-  recibirArduinoDosCorrecto = digitalRead(arduinoDosCorrecto);
-  recibirArduinoTresCorrecto = digitalRead(arduinoTresCorrecto);
+  gpio1.gpioDigitalWrite(3,LOW);
+  gpio1.gpioDigitalWrite(4,LOW);
+  gpio1.gpioDigitalWrite(5,LOW);
+  digitalWrite(ojos1, LOW);
+  digitalWrite(ojos2, LOW);
+  delay(5);
+  digitalWrite(laser,LOW);
   
   
-
   
-  if (recibirArduinoUnoCorrecto == HIGH && recibirArduinoDosCorrecto == HIGH && recibirArduinoTresCorrecto== HIGH) {
-   digitalWrite(enviarArduinoCuatroUnoCorrecto, HIGH);
-   digitalWrite(enviarArduinoCuatroDosCorrecto, HIGH);
-   digitalWrite(enviarArduinoCuatroTresCorrecto, HIGH);
-   digitalWrite(correct, HIGH);
-   digitalWrite(correct2, HIGH);
-   digitalWrite(laser,HIGH);
-   
-   
+    if(obtenerGpioValor()){
+      gpio1.gpioDigitalWrite(3,HIGH);
+      gpio1.gpioDigitalWrite(4,HIGH);
+      gpio1.gpioDigitalWrite(5,HIGH);
+      delay(10000);
+      
+      digitalWrite(ojos1, HIGH);
+       digitalWrite(ojos2, HIGH);
+       delay(2000);
+       digitalWrite(laser,HIGH);
+    }
+    else{
+      gpio1.gpioDigitalWrite(3,LOW);
+      gpio1.gpioDigitalWrite(4,LOW);
+      gpio1.gpioDigitalWrite(5,LOW);
+      digitalWrite(ojos1, LOW);
+       digitalWrite(ojos2, LOW);
+       digitalWrite(laser,LOW);
+    }
+  
   }
-  else{
- 
-  digitalWrite(enviarArduinoCuatroUnoCorrecto, LOW);
-   digitalWrite(enviarArduinoCuatroDosCorrecto, LOW);
-   digitalWrite(enviarArduinoCuatroTresCorrecto, LOW);
-   digitalWrite(correct, LOW);
-   digitalWrite(correct2, LOW);
-   digitalWrite(laser,LOW);
   
-  }
-  
-  //temp = correct;
-  //temp = true;
-  
-  }
-  else{
+   else{
   digitalWrite(correct, LOW);
-  digitalWrite(correct2, LOW);
+  //digitalWrite(correct2, LOW);
   digitalWrite(incorrect, HIGH);
+  gpio1.gpioDigitalWrite(3,LOW);
+     gpio1.gpioDigitalWrite(4,LOW);
+     gpio1.gpioDigitalWrite(5,LOW);
+  digitalWrite(ojos1, LOW);
+  digitalWrite(ojos2, LOW);
+       delay(5);
+       digitalWrite(laser,LOW);
   
-  //temp = correct;
-  //temp = false;
- 
-  
-  
+  }// else
   }
-  //Serial.println(comparePairs(ValTotem,OtherValTotem));
-  
-  /* 
-  // activacion del servo
-    if(temp == HIGH)
-  {
-    //digitalWrite(servoActivo,HIGH);
-    //posicion = 150;            // Establecemos el valor de la posicion a 150º  
-    //posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
-    servo.write(90);                  // Escribimos la posicion con el mapa de valores al servo  
-    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
-
-  }else{
-   //digitalWrite(servoActivo,LOW);
-   servo.write(0);
-  
-  }
-  */
-  
-  
- }  //loop
- 
+    
  
  // THIS FUNCTION IS FOR HALL SENSOR
   bool getHallValue(int x){
@@ -210,5 +173,31 @@ void loop() {
   }
   
  
-
+bool getHallValue2(int x)
+ {
+    if(x < 16){
+      if(gpio1.gpioDigitalRead(x)) return true;
+      else return false; 
+    }else{
+    return false;
+    }
+    
+  }
+  
+  
+   bool obtenerGpioValor()
+  {
+    for(int i=0; i<=2; i++){
+      if(getHallValue2(i) == true && getHallValue2(i+1) == true && getHallValue2(i+2) == true) 
+      return true;
+      else 
+      return false;
+    
+    
+    }
+    
+    
+    
+    
+  }
 
