@@ -48,6 +48,8 @@ int tercerAnillo3 = 7;
 int correct = 13;
 int incorrect = 8;
 
+
+
 // para servomotror
 Servo servo; // se crea un objeto servo
 int posicion=0; // posicion del servo
@@ -63,6 +65,8 @@ int temp5 = 0;
 int temp6 = 0;
 
 int temp = 0;
+
+int mosfet = 11;
 
 
 // INPUTS AND OUTPUTS, entradas y salidas
@@ -82,6 +86,8 @@ void setup() {
   // salidas
   pinMode(correct, OUTPUT);  
   pinMode(incorrect, OUTPUT); 
+  
+  pinMode(mosfet, OUTPUT); 
   
   // servomotor
   servo.attach(10); // seleccionamos el PIN a usar.
@@ -104,18 +110,21 @@ void loop() {
   temp5 = digitalRead(segundoAnillo2);  
   temp6 = digitalRead(tercerAnillo3); 
   
+  
+  
   if(comparePairs(primerAnillo,primerAnillo1) && comparePairs(segundoAnillo,segundoAnillo2) && comparePairs(tercerAnillo,tercerAnillo3) ){
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
   //temp = correct;
-  temp = true;
- 
+  //temp = true;
+  digitalWrite(mosfet, HIGH);
   }
   else{
   digitalWrite(incorrect, HIGH);
   digitalWrite(correct, LOW);
   //temp = correct;
-  temp = false;
+  //temp = false;
+  digitalWrite(mosfet, LOW);
   
   }
   

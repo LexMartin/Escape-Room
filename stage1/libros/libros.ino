@@ -17,6 +17,7 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 1 CIRCUITO MOSFET
 1 SOLENOIDE CERRADURA
 2 LEDS
+1 REALAY
 */
 
 /*  CABLES
@@ -25,6 +26,7 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
   3         4       para GPIO
   1         3       para mosfet
   2         2        para leds
+  1         3        para el relay
   
 *Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
 *El solenoide necesita cables para una fuente de poder
@@ -38,20 +40,22 @@ pca9555 gpio3(0x27);
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 
 int* entradasPin = new int [35];
+int relay = 3;
 
-
+/*
 // para servomotror
 
 Servo servo; // se crea un objeto servo
 int posicion = 0; // posicion del servo
 //int servoActivo = 9;
 int temp = 0;
-
+*/
 // INPUTS AND OUTPUTS, entradas y salidas
 // para declarar la entra o salida del PIN
+int temp = 0;
 void setup() {
   
-  
+    pinMode(relay, OUTPUT);  
     
     Serial.begin(38400);
     delay(100);
@@ -80,11 +84,11 @@ void setup() {
    }
   
    
-  
+ /* 
   // servomotor
    servo.attach(3); // seleccionamos el PIN a usar.
   
-  
+  **/
   Serial.begin(9600); 
   
 
@@ -92,14 +96,14 @@ void setup() {
 
  
 void loop() {
-
+       
    //Serial.println("incio del LOOP");
    Serial.println(compararTodo());
    if(compararTodo()){
      gpio3.gpioDigitalWrite(4,HIGH);
      gpio3.gpioDigitalWrite(5,LOW);
-    
-     temp = true;
+     digitalWrite(relay, HIGH);
+     //temp = true;
      
    
    
@@ -107,12 +111,13 @@ void loop() {
      
      gpio3.gpioDigitalWrite(4,LOW);
      gpio3.gpioDigitalWrite(5,HIGH);
-      temp = false;
+      //temp = false;
+     digitalWrite(relay, LOW);
    }
   
   
 
-  
+  /*
   // activacion del servo
     if(temp)
   {
@@ -124,7 +129,7 @@ void loop() {
   }
   
   Serial.println("fin del lOOP");
-  
+  */
 
 }
  

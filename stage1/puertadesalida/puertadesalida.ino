@@ -51,7 +51,7 @@ int puntoCuatro4 = 9;
 int correct = 13;  
 int incorrect = 10;  
 
-
+int mosfet = 12;
 // para servomotror
 Servo servo; // se crea un objeto servo
 int posicion=0; // posicion del servo
@@ -85,7 +85,7 @@ void setup() {
   pinMode(puntoDos2, INPUT); 
   pinMode(puntoTres3, INPUT); 
   pinMode(puntoCuatro4, INPUT); 
-  
+  pinMode(mosfet,OUTPUT);
 
   // salidas
   pinMode(correct, OUTPUT);  
@@ -118,15 +118,15 @@ void loop() {
 
 // Descomentar la linea siguiente si el juego requiere que los 4 puntos tengan un respaldo, necesitara usar 8 fotoresistencias 
 // el IF compara por medio de un or para asegurarse 
-if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4))){
+//if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4))){
   
   
 // en esta caso el juego solo tiene 4 fotoresistencias que son los 4 puntos de la puerta de salida  
- // if( getHallValue(puntoUno) && getHallValue(puntoDos) && getHallValue(puntoTres) && getHallValue(puntoCuatro))  {
+  if( getHallValue(puntoUno) && getHallValue(puntoDos) && getHallValue(puntoTres) && getHallValue(puntoCuatro))  {
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
-  //temp = correct;
-  temp = true;
+  digitalWrite(mosfet, HIGH);
+  //temp = true;
   /*
   if(temp)
   {
@@ -139,8 +139,9 @@ if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && 
   else{
   digitalWrite(correct, LOW);
   digitalWrite(incorrect, HIGH);
-  //temp = correct;
-  temp = false;
+   digitalWrite(mosfet, LOW);
+  
+  //temp = false;
  
   
   
@@ -170,7 +171,7 @@ if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && 
  
  // para las fotoresistencias
   bool getHallValue(int x){
-    if (digitalRead(x)) return false;
+    if (!digitalRead(x)) return false;
     else return true;
   }
   
