@@ -1,5 +1,3 @@
-#include <Servo.h>
-
 
 /*
 
@@ -12,20 +10,32 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 /* MATERIALES
 8 FOTORESISTENCIAS 
 1 ARDUINO UNO
-1 SERVOMOTOR
-1 CIRCUITO MOSFET
+1 SOLENOIDE
+1 Relay
 2 LEDS
 */
 
-/*  CABLES
+/*  CABLES para montar en PROTOBOARD
+
+
+
+Jumpers:
+M-M: MACHO A MACHO
+M-H: MACHO A HEMBRA
+H-H: HEMBRA A HEMBRA
+
+
+
 #CABLES | #HILOS | 
-  8          3     para fotoresistencias
-  1          3     para circuito mosfet
-  2          2     para los leds
+  2          2      M-M para corriente y tierra del protoboard, puente de protoboard
+  8          3       M-H para fotoresistencias
+  2          1      M-M para leds
+  1          3      M-H para relay
+  1          2      M-M para solenoide (no olvide los cables
+                  para la conectarlo con la fuente de 12v)
   
   
-*Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
-*El servo motor necesita cables para una fuente de poder
+
   
 */
 
@@ -52,10 +62,7 @@ int correct = 13;
 int incorrect = 10;  
 
 int mosfet = 12;
-// para servomotror
-Servo servo; // se crea un objeto servo
-int posicion=0; // posicion del servo
-//int servoActivo = 9;
+
 
 //variables para guardar
 int temp = 0;
@@ -90,12 +97,8 @@ void setup() {
   // salidas
   pinMode(correct, OUTPUT);  
   pinMode(incorrect, OUTPUT); 
-  //pinMode(servoActivo, OUTPUT);     
-  
-  // servomotor
-  servo.attach(11); // PIN PARA EL SERVOMOTOR
-  
-  
+    
+ 
   Serial.begin(9600); 
   
  
@@ -110,62 +113,29 @@ void loop() {
   temp3 = digitalRead(puntoTres);         
    temp4 = digitalRead(puntoCuatro);      
  
-/*
+
  temp5 = digitalRead(puntoUno1);  
-      temp6 = digitalRead(puntoDos2);  
-        temp7 = digitalRead(puntoTres3); 
-             temp8 = digitalRead(puntoCuatro4);  */
+ temp6 = digitalRead(puntoDos2);  
+  temp7 = digitalRead(puntoTres3); 
+   temp8 = digitalRead(puntoCuatro4);  
 
 // Descomentar la linea siguiente si el juego requiere que los 4 puntos tengan un respaldo, necesitara usar 8 fotoresistencias 
 // el IF compara por medio de un or para asegurarse 
-//if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4))){
+if( (comparePairs(puntoUno,puntoUno1)) && (comparePairs(puntoDos,puntoDos2)) && (comparePairs(puntoTres,puntoTres3)) && (comparePairs(puntoCuatro,puntoCuatro4))){
   
   
 // en esta caso el juego solo tiene 4 fotoresistencias que son los 4 puntos de la puerta de salida  
-  if( getHallValue(puntoUno) && getHallValue(puntoDos) && getHallValue(puntoTres) && getHallValue(puntoCuatro))  {
+ // if( getHallValue(puntoUno) && getHallValue(puntoDos) && getHallValue(puntoTres) && getHallValue(puntoCuatro))  {
   digitalWrite(correct, HIGH);
   digitalWrite(incorrect, LOW);
   digitalWrite(mosfet, HIGH);
-  //temp = true;
-  /*
-  if(temp)
-  {
-    digitalWrite(z,HIGH);
 
-  }
-  */
-  
   }
   else{
   digitalWrite(correct, LOW);
   digitalWrite(incorrect, HIGH);
    digitalWrite(mosfet, LOW);
-  
-  //temp = false;
- 
-  
-  
   }
-  //Serial.println(comparePairs(ValTotem,OtherValTotem));
-  
-  
-  
-  // activacion del servo
-    if(temp)
-  {
-    //digitalWrite(servoActivo,HIGH);
-    //posicion = 150;            // Establecemos el valor de la posicion a 150º  
-    //posicion = map(posicion, 0, 1023, 0, 179);     // Establecemos la relacion entre los grados de giro y el PWM  
-    servo.write(90);                  // Escribimos la posicion con el mapa de valores al servo  
-    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
-
-  }else{
-  // digitalWrite(servoActivo,LOW);
-    servo.write(0);  
-  }
-  
-  
-  
  }  //loop
  
  

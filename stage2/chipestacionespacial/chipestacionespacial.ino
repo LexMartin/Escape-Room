@@ -6,7 +6,15 @@ Automatizacion - chip, estacion espacial
 Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
+/*
+material
+1 arduino
+6 sensores hall
+2 leds
+1 solenoide cerradura
+1 circuito mosfet
 
+*/
 
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.

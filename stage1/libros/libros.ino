@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include <pca9555.h>
 
-#include <Servo.h>
+
 
 /*
 Automatizacion - libros
@@ -14,22 +14,27 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 1 ARDUINO UNO
 36 SENSORES HALL
 3 GPIO
-1 CIRCUITO MOSFET
 1 SOLENOIDE CERRADURA
 2 LEDS
-1 REALAY
+1 RELAY
 */
 
-/*  CABLES
+/*  CABLES para montar en PROTOBOARD
+
+Jumpers:
+M-M: MACHO A MACHO
+M-H: MACHO A HEMBRA
+H-H: HEMBRA A HEMBRA
+
+
 #CABLES | #HILOS | 
-  36        3       para sensores hall
-  3         4       para GPIO
-  1         3       para mosfet
-  2         2        para leds
-  1         3        para el relay
+  36        3       H-H para sensores hall
+  1         4       M-H para el primer GPIO - Arduino
+  2         4       H-H para el segundo y tercer GPIO
+  2         2       H-M  para leds
+  1         3       uno M-H y dos H-H para el relay
   
-*Corriente y tierra del arduino dependende de como lo vayan ustedes a conectar 
-*El solenoide necesita cables para una fuente de poder
+
 *jumpers pequeños para gpio ya incluidos
 */
 
@@ -42,14 +47,6 @@ pca9555 gpio3(0x27);
 int* entradasPin = new int [35];
 int relay = 3;
 
-/*
-// para servomotror
-
-Servo servo; // se crea un objeto servo
-int posicion = 0; // posicion del servo
-//int servoActivo = 9;
-int temp = 0;
-*/
 // INPUTS AND OUTPUTS, entradas y salidas
 // para declarar la entra o salida del PIN
 int temp = 0;
@@ -83,12 +80,7 @@ void setup() {
    
    }
   
-   
- /* 
-  // servomotor
-   servo.attach(3); // seleccionamos el PIN a usar.
-  
-  **/
+
   Serial.begin(9600); 
   
 
@@ -116,20 +108,6 @@ void loop() {
    }
   
   
-
-  /*
-  // activacion del servo
-    if(temp)
-  {
-    servo.write(90);                  // Escribimos la posicion con el mapa de valores al servo  
-    delay(150);                           // Y le damos un tiempo para que sea capaz de moverse   
-
-  }else{
-    servo.write(0);
-  }
-  
-  Serial.println("fin del lOOP");
-  */
 
 }
  

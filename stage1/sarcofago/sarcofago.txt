@@ -1,0 +1,20 @@
+SARCÓFAGO
+
+MATERIALES
+2 ARDUINOS
+12 SENSORES HALL
+2 LEDS
+2 SOLENOIDE CERRADURA
+2 CIRCUITOS MOSFET
+
+
+EN ESTE CASO SE UTILIZA MOSFET PERO TIENE LA MISMA FUNCIÓN QUE UN RELAY
+
+1.- Conectar 5v en la línea roja y  GND en la línea azul del protoboard. (Crear puente de los lados para alimentar toda la protoboard).
+2.- Los pines 2,3,4,5,6,7 son para los sensores hall. Los sensores tienen cuatro pines con los nombres: A0-GND-VCC-DO, los únicos que se van a utlizar son los últimos tres (GND-VCC-DO). DO va conectado a un pin del arduino (2,3,4,5,6,7). GND Y VCC van conectados a tierra y corriente correspondientemente.
+3.- Los pines con número 8 y 13, son solo para indicar si el juego es correcto o incorrecto: en el diagrama se muestra que el 13 esta conectado al led verde que corresponde al correcto y el 8 esta conectado al led rojo que corresponde al incorrecto.
+4.- El pin número 11 es la salida para el mosfet. El mosfet tiene tres pines: VCC-GND- SIG y del otro lado tiene 4 salidas: VIN - GND y V+ - V-.
+En el protoboard se conecta VCC Y GND como tierra y corriente. El pin con nombre SIG corresponde al pin número 11 del arduino.
+En el caso de las 4 salidas, VIN y GND es para alimentar con la fuente de 12v, y V+ con V- es para el solenoide. (consulte la imagen que se encuentra en la carpeta: "mosfet solenoide")
+
+

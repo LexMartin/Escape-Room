@@ -1,0 +1,18 @@
+TOTEMS QUE CONTIENEN LASER
+
+MATERIAL POR TOTEM
+
+6 SENSORES
+2 LEDS
+1 RELAY
+1 ARDUINO
+1 SOLENOIDE CERRADURA 
+       
+
+1.- Conectar 5v en la línea roja y  GND en la línea azul del protoboard. (Crear puente de los lados para alimentar toda la protoboard).
+2.- Los pines 3,4,5,6,7,8 son para los sensores hall. Los sensores tienen cuatro pines con los nombres: A0-GND-VCC-DO, los únicos que se van a utlizar son los últimos tres (GND-VCC-DO). DO va conectado a un pin del arduino (3,4,5,6,7,8). GND Y VCC van conectados a tierra y corriente correspondientemente.
+3.- Los pines con número 9 y 10, son solo para indicar si el juego es correcto o incorrecto: en el diagrama se muestra que el 9 esta conectado al led verde que corresponde al correcto y el 10 esta conectado al led rojo que corresponde al incorrecto.
+4.- Los pines número 11 y 12 son para los ojos rojos, colocar LEDs de color rojo.
+5.- El pin número 13 es la salida para el laser. Los pines del laser tiene una S de un lado y un - (signo negativo) por el otro, el pin con el signo negativo va conectado a tierra del protoboard, el pin de en medio a corriente, y finalmente el pin que está alado de la S, es el que va conectado al pin número 13 del arduino.
+
+

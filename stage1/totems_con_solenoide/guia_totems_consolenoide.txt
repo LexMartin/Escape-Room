@@ -1,0 +1,17 @@
+TOTEMS QUE CONTIENEN SOLENOIDE
+
+MATERIAL POR TOTEM
+
+6 SENSORES
+2 LEDS
+1 RELAY
+1 ARDUINO
+1 SOLENOIDE CERRADURA 
+       
+
+1.- Conectar 5v en la línea roja y  GND en la línea azul del protoboard. (Crear puente de los lados para alimentar toda la protoboard).
+2.- Los pines 3,4,5,6,7,8 son para los sensores hall. Los sensores tienen cuatro pines con los nombres: A0-GND-VCC-DO, los únicos que se van a utlizar son los últimos tres (GND-VCC-DO). DO va conectado a un pin del arduino (3,4,5,6,7,8). GND Y VCC van conectados a tierra y corriente correspondientemente.
+3.- Los pines con número 9 y 10, son solo para indicar si el juego es correcto o incorrecto: en el diagrama se muestra que el 9 esta conectado al led verde que corresponde al correcto y el 10 esta conectado al led rojo que corresponde al incorrecto.
+4.- El pin número 11 es la salida para el relay. El relay tiene tres pines: VCC-GND-IN y del otro lado tiene tres salidas (donde se encuentras las letras en chino). En el protoboard se conecta VCC Y GND como tierra y corriente. El pin con nombre IN corresponde al pin número 11 del arduino.
+5.- Conectar en las salidas el solenoide. El solenoide debe ser alimentado con 12 voltios. En la imagen "conectar solenoide" se puede ver como se debe conectar, en vez de una lampara será el solenoide.
+

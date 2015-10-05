@@ -11,6 +11,19 @@ E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
 
 
+/*
+material
+
+2 leds
+1 arduino
+6 sensores hall
+1 solenoide cerradura
+1 circuito mosfet
+
+*/
+
+
+
 int primerAgujero = 3;
 int segundoAgujero = 4;
 int tercerAgujero = 5; 

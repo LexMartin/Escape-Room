@@ -6,7 +6,14 @@ Automatizacion - discos magneticos
 Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
+/*
+GPIO
+16 SENSORES HALL
+1 SOLENOIDE
+1 MOSFET
 
+
+*/
 
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 // El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
