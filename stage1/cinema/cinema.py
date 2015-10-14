@@ -55,8 +55,16 @@ io.pinMode(4,io.OUTPUT) #luz
 
 io.pinMode(5,io.OUTPUT) #ventana que se abre
 
-io.pinMode(12,io.OUTPUT) #ojos
-io.pinMode(13,io.OUTPUT) #ojos
+io.pinMode(12,io.OUTPUT) #ojos1
+io.pinMode(13,io.OUTPUT) #ojos1
+
+io.pinMode(21,io.OUTPUT)
+io.pinMode(22,io.OUTPUT)
+
+io.pinMode(23,io.OUTPUT)
+io.pinMode(24,io.OUTPUT)
+
+
 
 io.pinMode(14,io.OUTPUT) #pantalla para el video
 
@@ -66,17 +74,23 @@ variable = True
 def secuencia(value):
     if(value and variable):
     
-    #print("MASCARAS CORRECTAS - JUEGO CORRECTO")
-    #print("VIBRACION DE LAS MASCARAS")
+	#print("MASCARAS CORRECTAS - JUEGO CORRECTO")
+	#print("VIBRACION DE LAS MASCARAS")
     
     # PUNTO UNO:
         io.digitalWrite(0,io.HIGH)
         io.digitalWrite(2,io.HIGH)
         io.digitalWrite(3,io.HIGH)# vibrador
         time.sleep(2) # 2 segundos
-    
+	
+	io.digitalWrite(0,io.LOW)
+	io.digitalWrite(2,io.LOW)
+	io.digitalWrite(3,io.LOW)
+	time.sleep(2)    
+
+
     #PUNTO DOS:
-       #print("APAGANDO LUZ")
+	   #print("APAGANDO LUZ")
         io.digitalWrite(4,io.LOW) # se apaga la luz
 
     #PUNTO TRES: 
@@ -86,11 +100,15 @@ def secuencia(value):
         time.sleep(5) # Asignar el tiempo (en segundos) dependiendo de lo q tarde en abrir la ventana
 
     #PUNTO CUATRO:
-    #print("ENCENDER OJOS DE MASCARAS")
+	#print("ENCENDER OJOS DE MASCARAS")
         io.digitalWrite(12,io.HIGH) # para el encedido de los ojos de la mascaras
         io.digitalWrite(13,io.HIGH)
+	io.digitalWrite(21,io.HIGH)
+	io.digitalWrite(22,io.HIGH)
+	io.digitalWrite(23,io.HIGH)
+	io.digitalWrite(24,io.HIGH)
         time.sleep(5) #asignar un tiempo deseado
-    
+	
     #PUNTO CINCO:
 
     #print("ENCENDER PANTALLA")
@@ -104,29 +122,33 @@ def secuencia(value):
      # myprocess = subprocess.Popen(['omxplayer','NOMBRE DEL VIDEO.mp4'])
      # asignar NOMBRE DEL VIDEO y el FORMATO
 
-        myprocess = subprocess.Popen(['omxplayer','videomuestra.mp4'])
+        myprocess = subprocess.Popen(['omxplayer','/home/pi/Desktop/videomuestra.mp4'])
 
-        time.sleep(65)# PONGA LA DURACION DEL VIDEO (EN SEGUNDOS)+ tiempo extra (aprox. 10 segundos)
+        time.sleep(70)# PONGA LA DURACION DEL VIDEO (EN SEGUNDOS)+ tiempo extra (aprox. 10 segundos)
        
 
     ###### CUANDO FINALIZA EL VIDEO
     ## ASIGNAR EL TIEMPO DESEADO EN time.sleep(TIEMPO EN SEGUNDOS)
-        #print("ENCENDER LUCES")
+    	#print("ENCENDER LUCES")
         io.digitalWrite(4,io.HIGH)
-        #print("APAGAR PANTALLA")
-        io.digitalWrite(14,io.LOW)
-        time.sleep(5)
-        #print("apagar ojos")
-        io.digitalWrite(12,io.LOW) 
+    	#print("APAGAR PANTALLA")
+    	io.digitalWrite(14,io.LOW)
+    	time.sleep(5)
+    	#print("apagar ojos")
+    	io.digitalWrite(12,io.LOW) 
         io.digitalWrite(13,io.LOW)
+	io.digitalWrite(21,io.LOW)
+	io.digitalWrite(22,io.LOW)
+	io.digitalWrite(23,io.LOW)
+	io.digitalWrite(24,io.LOW)
         time.sleep(5)
-        #print("cierra ventana")
-        io.digitalWrite(5,io.LOW)
-        #print("vibracion")
-        io.digitalWrite(0,io.LOW)
+    	#print("cierra ventana")
+    	io.digitalWrite(5,io.LOW)
+    	#print("vibracion")
+    	io.digitalWrite(0,io.LOW)
         io.digitalWrite(2,io.LOW)
         io.digitalWrite(3,io.LOW)
-    
+	
         
     else:
         #GPIO.output(11, False)
