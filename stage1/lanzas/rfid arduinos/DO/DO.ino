@@ -2,28 +2,29 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define RST_PIN         9           // Configurable
-#define SS_PIN          10          // Configurable
+//============ Parametros Configurables ============================
+
+// Se define el uID del Tag, este se obtiene de la lectura del Tag 
+// Se toman en pares y en minisculas y se escriben precedudos por 0x
+// Ejemplo: Tag ID: 40EFF56A
+// byte value[] = {0x40, 0xef, 0xf5, 0x6a};
+byte value[] = {0x19, 0x52, 0x85, 0x9e};
+
+//=================================================================
+
+#define RST_PIN         9          
+#define SS_PIN          10          
 #define PRESENT_PIN     8
 #define CORRECT_PIN     7
-MFRC522 mfrc522(SS_PIN, RST_PIN);   //Se crea el objeto MFRC522
 
+MFRC522 mfrc522(SS_PIN, RST_PIN);   //Se crea el objeto MFRC522
 MFRC522::MIFARE_Key key;
 
-byte sector         = 0;
-byte blockAddr      = 1;
-
-/*
- * DO : {0x44, 0x4f}
- * RE : {0x52, 0x45}
- * MI : {0x4d, 0x49}
- * FA : {0x46, 0x41}
- */
-byte value[] = {0x52 ,0x45}; // nota musical
-byte last[] = {0x00,0x00};
+byte last[] = {0x00,0x00,0x00,0x00};
 byte status;
-byte buffer[18];
+byte buffer[4];
 byte size = sizeof(buffer);
+
 
 
 void setup() {
@@ -37,11 +38,11 @@ void setup() {
     for (byte i = 0; i < 6; i++) {
         key.keyByte[i] = 0xFF;
     }
+  
     pinMode(PRESENT_PIN,OUTPUT);
     pinMode(CORRECT_PIN,OUTPUT);
     digitalWrite(CORRECT_PIN,LOW);
     digitalWrite(PRESENT_PIN,LOW);
-    
 }
 
 void loop() {
@@ -55,22 +56,14 @@ void loop() {
     if ( ! mfrc522.PICC_ReadCardSerial())
         return;
 
-    
+    //Realiza la lectura del uID del Tag
+    for (int i = 0; i < 4; i++) {  //
+    buffer[i] = mfrc522.uid.uidByte[i];
+    //Serial.print(readCard[i], HEX);   //Debug
+  }
+    //Serial.println();                   //Debug
    
-    // Authenticate using key A
-    status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, blockAddr, &key, &(mfrc522.uid));
-    if (status != MFRC522::STATUS_OK) {
-        Serial.print(F("PCD_Authenticate() failed: "));
-        Serial.println(mfrc522.GetStatusCodeName(status));
-        return;
-    }
-    // Read data from the block
-    status = mfrc522.MIFARE_Read(blockAddr, buffer, &size);
-    if (status != MFRC522::STATUS_OK) {
-        Serial.print(F("MIFARE_Read() failed: "));
-        Serial.println(mfrc522.GetStatusCodeName(status));
-    }
-    //dump_byte_array(buffer, 16);
+     
     if(compareByte(buffer,sizeof(value),value))
     {
       digitalWrite(CORRECT_PIN,HIGH);
@@ -81,15 +74,6 @@ void loop() {
       digitalWrite(CORRECT_PIN,LOW);
       Serial.println("FALSE");
     }
-    
-    
-   
-    
-    // Halt PICC
-   
-    mfrc522.PICC_HaltA();
-    // Stop encryption on PCD
-    mfrc522.PCD_StopCrypto1();
 }
 
 
