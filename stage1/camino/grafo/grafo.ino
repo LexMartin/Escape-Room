@@ -82,6 +82,8 @@ void loop() {
   {
     //Serial.println("En el wuile");
     activeNeighbor = readNeighbors(graph[nodeSelected]);
+    
+    
     //Serial.println(activeNeighbor);
     while(activeNeighbor == 99){
         activeNeighbor = readNeighbors(graph[nodeSelected]);
@@ -200,10 +202,10 @@ void inicialNode()
 int readNeighbors(int node[])
 {
   int selected;
-  //Serial.println("Leer vecinos");
+  Serial.println("Leer vecinos");
   for(int i = 0; i < node[6];i++)
   {
-    //Serial.print(node[i]);
+    Serial.print(node[i]);
     if(getHallValue(node[i]))
     {
       selected = node[i];
