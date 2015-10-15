@@ -148,12 +148,15 @@ def secuencia(value):
     	io.digitalWrite(0,io.LOW)
         io.digitalWrite(2,io.LOW)
         io.digitalWrite(3,io.LOW)
+        time.sleep(100) #tiempo de reinicio
+        
 	
         
     else:
         #GPIO.output(11, False)
         #LUZ ENCENDIDA
         io.digitalWrite(4,io.HIGH)
+        
 
         
 
