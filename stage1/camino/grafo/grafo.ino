@@ -4,39 +4,42 @@
 pca9555 gpio1(0x20);
 pca9555 gpio2(0x25);
 pca9555 gpio3(0x27);
-int n_nodes = 7;
+int n_nodes = 23;
 int inicial_node=0;
+int final_node =23;
 int nodeSelected = inicial_node;
 int winGame = 0;
+int j = 0;
 //Se representa el grafo con una matriz de concurrencias, la posición  6 representa el número de vecinos que posee el nodo k
 int graph[24][7] = 
  {
-                     {1,2,3,0,0,0,3},
-                     {0,2,0,0,0,0,2},
-                     {0,1,3,4,0,0,4},
-                     {0,2,4,0,0,0,3},
-                     {2,3,5,6,7,0,5},
-                     {4,6,0,0,0,0,2},
-                     {4,5,7,0,0,0,3},
-                     {4,6,8,9,10,0,5},
-                     {17,9,7,0,0,0,3},
-                     {8,7,10,11,13,17,6},
-                     {7,9,11,0,0,0,3},
-                     {10,9,13,12,0,0,4},
-                     {13,11,0,0,0,0,2},
-                     {17,9,11,12,14,16,6},
-                     {13,15,16,0,0,0,3},
-                     {16,14,0,0,0,0,2},
-                     {18,17,13,14,15,20,6},
-                     {16,13,9,8,0,0,4},
-                     {16,19,0,0,0,0,2},
-                     {22,20,18,0,0,0,3},
-                     {21,22,19,16,0,0,4},
-                     {22,20,0,0,0,0,2},
-                     {21,20,19,23,0,0,4},
-                     {22,0,0,0,0,0,1},
+                     {1,2,3,0,0,0,3}, //A 0
+                     {0,2,0,0,0,0,2}, //1
+                     {0,1,3,4,0,0,4}, //2
+                     {0,2,4,0,0,0,3}, //3
+                     {2,3,5,6,7,0,5},// 4
+                     {4,6,0,0,0,0,2}, //5
+                     {4,5,7,0,0,0,3}, //6
+                     {4,6,8,9,10,0,5}, //7
+                     {17,9,7,0,0,0,3}, //8 
+                     {8,7,10,11,13,17,6},//9
+                     {7,9,11,0,0,0,3}, //10
+                     {10,9,13,12,0,0,4}, //11
+                     {13,11,0,0,0,0,2}, //12
+                     {17,9,11,12,14,16,6},//13
+                     {13,15,16,0,0,0,3}, //14
+                     {16,14,0,0,0,0,2}, //15
+                     {18,17,13,14,15,20,6},//16
+                     {16,13,9,8,0,0,4}, //17
+                     {16,19,0,0,0,0,2}, //18
+                     {22,20,18,0,0,0,3}, //19
+                     {21,22,19,16,0,0,4},//20
+                     {22,20,0,0,0,0,2}, //21
+                     {21,20,19,23,0,0,4},//22
+                     {22,0,0,0,0,0,1}//23
      };
 int visitedNodes[24] = {0};
+
 void setup() {
   
   
@@ -50,7 +53,7 @@ void setup() {
     
     
     
-    gpio3.gpioPinMode(OUTPUT);
+    //gpio3.gpioPinMode(OUTPUT);
 
     for(int i = 0; i < 16 ; i++)
     {
@@ -69,12 +72,11 @@ void setup() {
     }
 
     
-    
+    error();
   
 }
 
 void loop() {
-  int j =0;
   
   int activeNeighbor;
   inicialNode();
@@ -83,7 +85,7 @@ void loop() {
     //Serial.println("En el wuile");
     activeNeighbor = readNeighbors(graph[nodeSelected]);
     
-    
+    Serial.println(getNeighbors(graph[nodeSelected]));
     //Serial.println(activeNeighbor);
     while(activeNeighbor == 99){
         activeNeighbor = readNeighbors(graph[nodeSelected]);
@@ -92,9 +94,16 @@ void loop() {
     if(visitedNodes[activeNeighbor] == 0)
     {
       visitedNodes[activeNeighbor] = 1;
+      
       j++;
       nodeSelected = activeNeighbor;
       setVisitedLed(activeNeighbor,HIGH);
+      if(activeNeighbor == final_node && j < n_nodes )
+      {
+        error();
+      }
+      Serial.print("Nodo activo :");
+      Serial.println(activeNeighbor);
       
       
     }
@@ -104,7 +113,7 @@ void loop() {
       error();
       
     }
-
+  
     Serial.println(j);
     
   }
@@ -121,41 +130,25 @@ void winner()
   {
     visitedNodes[i] = 0;
   }
-  for(int i = 8 ; i < 16; i++ )
-  {
-    gpio1.gpioDigitalWrite(i,LOW);
-    gpio2.gpioDigitalWrite(i,LOW);
-    gpio3.gpioDigitalWrite(i,LOW);
-  }
 
-  delay(400);
+  if(inicial_node < final_node){
+     for(int i=final_node; i > inicial_node; i--){
 
-  for(int i = 15 ; i > 7; i-- )
-  {
-    gpio1.gpioDigitalWrite(i,HIGH);
-    delay(500);
-    
+         setVisitedLed(i,LOW);
+         delay(200);
+     }
+  
   }
-  for(int i = 15 ; i > 7; i-- )
-  {
-   
-    gpio2.gpioDigitalWrite(i,HIGH);
-    delay(500);
-
+  else{
+    for(int i = 0 ; i < n_nodes; i++){
+       setVisitedLed(i,LOW);
+       delay(200);
+    }
   }
-  for(int i = 15 ; i > 7; i-- )
-  {
-    gpio3.gpioDigitalWrite(i,HIGH);
-    delay(500);
-  }
-  delay(400);
-  for(int i = 8 ; i < 16; i++ )
-  {
-    gpio1.gpioDigitalWrite(i,LOW);
-    gpio2.gpioDigitalWrite(i,LOW);
-    gpio3.gpioDigitalWrite(i,LOW);
-  }
-
+  delay(700);
+  inicialNode(); 
+  nodeSelected = inicial_node;
+  j=0;
   
 }
 void error()
@@ -181,6 +174,7 @@ void error()
   } 
   inicialNode(); 
   nodeSelected = inicial_node;
+  j=0;
 }
 void inicialNode()
 {
@@ -197,15 +191,26 @@ void inicialNode()
     setVisitedLed(inicial_node,HIGH);
     
 }
-  
+
+String getNeighbors(int node[])
+{
+  String foo = "";
+  String comma = ", ";
+   for(int i = 0; i < node[6];i++)
+  {  
+    foo += node[i]+comma;
+  }
+
+  return foo;
+}
 
 int readNeighbors(int node[])
 {
   int selected;
-  Serial.println("Leer vecinos");
+  
   for(int i = 0; i < node[6];i++)
   {
-    Serial.print(node[i]);
+   
     if(getHallValue(node[i]))
     {
       selected = node[i];
@@ -213,6 +218,7 @@ int readNeighbors(int node[])
     }
     else selected = 99;
   }
+  
   //Serial.println("Seleccionado");
   //Serial.println(selected);
   return selected;
