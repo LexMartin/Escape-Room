@@ -8,7 +8,7 @@
 // Se toman en pares y en minisculas y se escriben precedudos por 0x
 // Ejemplo: Tag ID: 40EFF56A
 // byte value[] = {0x40, 0xef, 0xf5, 0x6a};
-byte value[] = {0x19, 0x52, 0x85, 0x9e};
+byte value[] = {0x49, 0x78, 0x7a, 0x9e};
 
 
 // Puertos de salida hacia el Arduino Principal
@@ -20,7 +20,7 @@ byte value[] = {0x19, 0x52, 0x85, 0x9e};
 
 #define RST_PIN         9          
 #define SS_PIN          10
-
+	
 MFRC522 mfrc522(SS_PIN, RST_PIN);   //Se crea el objeto MFRC522
 MFRC522::MIFARE_Key key;
 
@@ -45,18 +45,24 @@ void setup() {
     pinMode(CORRECT_PIN,OUTPUT);
     digitalWrite(CORRECT_PIN,LOW);
     digitalWrite(PRESENT_PIN,LOW);
+    *buffer = *empty;
 }
 
 void loop() {
   
   ifCorrect();  
-   
     // Look for new cards
+  
+    mfrc522.PCD_Init(); // Se reinician los registros lo cual causaba el problema de tarjeta Presente/ausente
+    
     if ( ! mfrc522.PICC_IsNewCardPresent()){
         digitalWrite(PRESENT_PIN,LOW);
+        Serial.println("Present FALSE");
         *buffer = *empty;
         return;
+       
     }
+     Serial.println("Present TRUE");
     digitalWrite(PRESENT_PIN,HIGH);
     if ( ! mfrc522.PICC_ReadCardSerial())
         return;
