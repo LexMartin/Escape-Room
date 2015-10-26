@@ -3,8 +3,15 @@
 #include <MFRC522.h>
 #include <Servo.h>
 
-#define RST_PIN         9           // Configurable
-#define SS_PIN          10          // Configurable
+/*--------------Configuraciones ------------------------*/
+
+int servoDelay = 30; // Velocidad del Servomotor
+byte value[] = {0x44, 0x49, 0x43, 0x45}; // D,I,C,E
+int Lock = 4; //Pin de salida para la CERRADURA
+/*------------------------------------------------------*/
+
+#define RST_PIN         9           // Configurable opcional
+#define SS_PIN          10          // Configurable opcional
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   //Se crea el objeto MFRC522
 Servo servo;
@@ -14,11 +21,11 @@ byte sector         = 0;
 byte blockAddr      = 1;
 
 
-byte value[] = {0x44, 0x49, 0x43, 0x45}; // D,I,C,E
+
 byte status;
 byte buffer[18];
 byte size = sizeof(buffer);
-int Lock = 4; //CERRADURA
+
 
 void setup() {
     Serial.begin(9600); 
@@ -89,11 +96,11 @@ void throwBack()
   for (int pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     servo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(15);                       // waits 15ms for the servo to reach the position
+    delay(servoDelay);                       // waits 15ms for the servo to reach the position
   }
   for (int pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
     servo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(15);                       // waits 15ms for the servo to reach the position
+    delay(servoDelay);                       // waits 15ms for the servo to reach the position
   }
   
 }
