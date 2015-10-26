@@ -7,9 +7,16 @@
 /*-------------- CONFIGURACIONES -------------------------------*/
 
 const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
-const int _n_levels=4;                //Número de elementos que contendrá la serie para ganar el juego
+const int _n_levels=8;                //Número de elementos que contendrá la serie para ganar el juego
 const unsigned char s[] = {0x0001,0x0002,0x0003,0x0004,0x0005,0x0006,0x0007,0x0008,0x0009,0x0010};//Sonidos debe llevar el formato 0x + numero de indice a 4 digitos, (ej. para la primera es: 0x0001)
-int serie_array[]={0,1,2,3};    //es la secuancia estatica que necesitamos ingresar {DO,RE,MI,FA,SOL,LA,SI}
+/*
+N = 0
+S = 1
+E = 2
+W = 3
+
+*/
+int serie_array[]={0,1,2,3,2,1,0,2};    //es la secuancia estatica que necesitamos ingresar
 /*--------------------------------------------------------------*/
 
 /** define mp3 class */
@@ -18,7 +25,6 @@ pca9555 gpio(0x27);
 Servo servo;
 // Variables
 int buttonState[] = {0,0,0,0};         // El estado actual de los botones
-int lastButtonState[] = {0,0,0,0};     // El estado previo de los botones
 int blockedRFID[]={0,0,0,0}; // Se bloquean los RFID que hayan tenido una lectura incorrecta, hasta que el tag no esté presente
 int currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int hole = 0;                 //el compartimiento secreto está cerrado
@@ -46,31 +52,26 @@ void loop() {
   int buttonValue = 0;
   int j = 0; //la posición actual de la serie 
   reset(); // reset todas los estados
-  while(hole == 1){
-      if(!verifyPresentTags()){
-          hole = 0;
-      }
-  }//Si el compartimiento secreto está abierto NO se hace nada hasta el reicio
+  while(hole == 1){  }//Si el compartimiento secreto está abierto NO se hace nada hasta el reicio
   //Iniciamos el juego
    while (j < n_levels){
       Serial.println("CurrentLEVEL");
       Serial.println(currentlevel); 
       //Mientras no haya cambio en los RFID, seguir con la lectura   
       while (buttonchange == 0){
-        for (int i = currentlevel-1; i < 4; i = i+1){                 
+        for (int i = 0 ; i < 4; i = i+1){                 
                 buttonState[i] =readRFID(i);// digitalRead(i+2);
                 buttonchange = buttonchange + buttonState[i];                  
             }
             delay(200);
        }
       //Evaluamos el cambio, de acuerdo a los estados
-      for (int i = currentlevel-1; i < 4; i = i + 1){
-          if (buttonState[i] == HIGH && lastButtonState[i] == LOW) {       
+      for (int i = 0; i < 4; i = i + 1){
+          if (buttonState[i] == HIGH) {       
                 delay(200);
                 buttonValue = buttonState[i];
                 currentValue=i; 
                 buttonState[i] = LOW;
-                lastButtonState[i] = HIGH;
                 buttonchange = 0;
                 
              }
@@ -112,7 +113,6 @@ void loop() {
 // Reinicia los estados de los
 void reset(){
   for(int i=0; i < 4;i++){
-    lastButtonState[i] = 0;
     buttonState[i]=0;
   }
 }
@@ -144,7 +144,7 @@ int readRFID(int value){
       //return 2;
       
    }
-  if(isCorrect  && isPresent  && lastButtonState[value] == 0){
+  if(isCorrect  && isPresent){
     //playSound(s[value]);
     return 1;
   }
