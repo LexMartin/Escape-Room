@@ -6,9 +6,13 @@
 
 // Se define el uID del Tag, este se obtiene de la lectura del Tag 
 // Se toman en pares y en minisculas y se escriben precedudos por 0x
-// Ejemplo: Tag ID: 40EFF56A
-// byte value[] = {0x40, 0xef, 0xf5, 0x6a};
-byte value[] = {0x19, 0x52, 0x85, 0x9e};
+// Ejemplo: Tag ID: 40EFF56A 29 76 7F 9E
+// byte value[] = {0x29, 0x76, 0x7f, 0x9e};
+// DO : 0x29, 0x76, 0x7f, 0x9e
+// RE : C9 2A 82 9E
+// MI : 49 35 7B 9E / 0x19, 0x52, 0x85, 0x9e
+// FA : C9 5C 7C 9E
+byte value[] = {0xc9, 0x5c, 0x7c, 0x9e};
 
 
 // Puertos de salida hacia el Arduino Principal
@@ -45,6 +49,7 @@ void setup() {
     pinMode(CORRECT_PIN,OUTPUT);
     digitalWrite(CORRECT_PIN,LOW);
     digitalWrite(PRESENT_PIN,LOW);
+    *buffer = *empty;
 }
 
 void loop() {
@@ -52,11 +57,13 @@ void loop() {
   ifCorrect();  
    
     // Look for new cards
+    mfrc522.PCD_Init(); // Se reinician los registros lo cual causaba el problema de tarjeta Presente/ausente
     if ( ! mfrc522.PICC_IsNewCardPresent()){
         digitalWrite(PRESENT_PIN,LOW);
         *buffer = *empty;
         return;
     }
+    
     digitalWrite(PRESENT_PIN,HIGH);
     if ( ! mfrc522.PICC_ReadCardSerial())
         return;
