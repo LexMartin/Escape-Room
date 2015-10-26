@@ -24,7 +24,7 @@ byte value[] = {0xc9, 0x5c, 0x7c, 0x9e};
 
 #define RST_PIN         9          
 #define SS_PIN          10
-
+	
 MFRC522 mfrc522(SS_PIN, RST_PIN);   //Se crea el objeto MFRC522
 MFRC522::MIFARE_Key key;
 
@@ -55,15 +55,20 @@ void setup() {
 void loop() {
   
   ifCorrect();  
-   
     // Look for new cards
+
+  
     mfrc522.PCD_Init(); // Se reinician los registros lo cual causaba el problema de tarjeta Presente/ausente
+    
+
     if ( ! mfrc522.PICC_IsNewCardPresent()){
         digitalWrite(PRESENT_PIN,LOW);
+        Serial.println("Present FALSE");
         *buffer = *empty;
         return;
+       
     }
-    
+
     digitalWrite(PRESENT_PIN,HIGH);
     if ( ! mfrc522.PICC_ReadCardSerial())
         return;
