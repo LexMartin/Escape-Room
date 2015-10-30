@@ -1,5 +1,7 @@
 #include <Wire.h>
 #include <pca9555.h>
+#define LOCK 4
+
 
 pca9555 gpio1(0x20);
 pca9555 gpio2(0x25);
@@ -10,6 +12,7 @@ int final_node =23;
 int nodeSelected = inicial_node;
 int winGame = 0;
 int j = 0;
+int TIMEWIN= 3*1000;
 //Se representa el grafo con una matriz de concurrencias, la posición  6 representa el número de vecinos que posee el nodo k
 int graph[24][7] = 
  {
@@ -39,12 +42,12 @@ int graph[24][7] =
                      {22,0,0,0,0,0,1}//23
      };
 int visitedNodes[24] = {0};
-
+ int activeNeighbor=0;
 void setup() {
   
   
 
-    
+    pinMode(LOCK,OUTPUT);
     Serial.begin(38400);
     delay(100);
     gpio1.begin();//x.begin(true) will override automatic SPI initialization
@@ -78,7 +81,13 @@ void setup() {
 
 void loop() {
   
-  int activeNeighbor;
+  
+n_nodes = 23;
+inicial_node=0;
+ final_node =23;
+nodeSelected = inicial_node;
+winGame = 0;
+//  int activeNeighbor;
   inicialNode();
   while(j < n_nodes)
   {
@@ -118,8 +127,10 @@ void loop() {
     
   }
 
-  winner();
-  
+ 
+ winner();
+ j=0;
+ 
   
 
 }
@@ -149,6 +160,10 @@ void winner()
   inicialNode(); 
   nodeSelected = inicial_node;
   j=0;
+  digitalWrite(LOCK,HIGH);
+  delay(TIMEWIN);
+  digitalWrite(LOCK,LOW);
+  software_Reset();
   
 }
 void error()
@@ -258,3 +273,9 @@ bool getHallValue(int x){
     }
   
   }
+  
+  
+void software_Reset() // Restarts program from beginning but does not reset the peripherals and registers
+{
+asm volatile ("  jmp 0");  
+} 
