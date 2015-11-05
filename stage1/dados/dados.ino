@@ -4,11 +4,23 @@
 #include <Servo.h>
 
 /*--------------Configuraciones ------------------------*/
+#define  servoPin 3 // Pin del Output del Servo   
+#define Cerradura  4 //Pin de salida para la CERRADURA
 
-int servoDelay = 30; // Velocidad del Servomotor
-byte value[] = {0x44, 0x49, 0x43, 0x45}; // D,I,C,E
-int Lock = 4; //Pin de salida para la CERRADURA
+byte value[] = {0x44, 0x49, 0x43, 0x45}; // D,I,C,E  
+
+int timeWinner = 2 * 1000;  // Segundos antes de reiniciar el juego
+const int servoDelay = 1 * 1000; // tiempo apertura cierre del Servo
+
+const int OPEN = 180; //Angulo de apertura del Servo
+const int CLOSE = 0; // Angulo de Cierre del Servo
 /*------------------------------------------------------*/
+
+
+// ----------  Parametros Internos NO MODIFICAR 
+
+const int LOCK=LOW;
+const int UNLOCK=HIGH;
 
 #define RST_PIN         9           // Configurable opcional
 #define SS_PIN          10          // Configurable opcional
@@ -20,12 +32,10 @@ MFRC522::MIFARE_Key key;
 byte sector         = 0;
 byte blockAddr      = 1;
 
-
-
 byte status;
 byte buffer[18];
 byte size = sizeof(buffer);
-
+//--------------------------------
 
 void setup() {
     Serial.begin(9600); 
@@ -39,8 +49,9 @@ void setup() {
         key.keyByte[i] = 0xFF;
     }
     int servoPos = 0;
-    servo.attach(3);
-    pinMode(Lock,OUTPUT);
+    servo.attach(servoPin);
+    pinMode(Cerradura,OUTPUT);
+    digitalWrite(Cerradura,LOCK);
     
 }
 
@@ -92,23 +103,21 @@ void loop() {
 void throwBack()
 {
   Serial.println("Tirar de nuevo");
-  digitalWrite(Lock,LOW);
-  for (int pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 degree
-    servo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(servoDelay);                       // waits 15ms for the servo to reach the position
-  }
-  for (int pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-    servo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(servoDelay);                       // waits 15ms for the servo to reach the position
-  }
+  digitalWrite(Cerradura,LOCK);
+ 
+  servo.write(OPEN);
+  delay(servoDelay);
+  servo.write(CLOSE);
   
 }
 
 void winner()
 {
   Serial.println("GANADOR");
-  digitalWrite(Lock,HIGH);
+  digitalWrite(Cerradura,UNLOCK);
+  delay(timeWinner);
+  throwBack();
+  
   
 }
 bool compareByte(byte *buffer, byte bufferSize , byte *value) {
