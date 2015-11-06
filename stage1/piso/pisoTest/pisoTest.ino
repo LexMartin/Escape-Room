@@ -4,6 +4,7 @@
 #include <MP3.h>
 #include <Servo.h>
 
+
 /*-------------- CONFIGURACIONES -------------------------------*/
 
 const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
@@ -26,12 +27,15 @@ Servo servo;
 // Variables
 int buttonState[] = {0,0,0,0};         // El estado actual de los botones
 int blockedRFID[]={0,0,0,0}; // Se bloquean los RFID que hayan tenido una lectura incorrecta, hasta que el tag no esté presente
+int inputSerie[]= {9,9,9,9,9,9,9,9};
 int currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int hole = 0;                 //el compartimiento secreto está cerrado
 //Función que inicializa el vector de la serie y la variable currentValue
 int currentlevel = 1; // es el nivel actual, es decir el numero de entradas correctas del usuari
 int right = 0; //1 indica que el usuario ingresó un dato correcto , 0 indica que ha fallado
 int n_levels = _n_levels; //niveles (se asigna el valor de _n_levels a n_levels por cuestiones de crear la memoria dinámicamente)
+
+
 
 void setup() {
   mp3.begin(MP3_SOFTWARE_SERIAL);    // select software serial
@@ -54,7 +58,7 @@ void loop() {
   reset(); // reset todas los estados
   while(hole == 1){  }//Si el compartimiento secreto está abierto NO se hace nada hasta el reicio
   //Iniciamos el juego
-   while (j < n_levels){
+   while (!compareSerie()){
       Serial.println("CurrentLEVEL");
       Serial.println(currentlevel); 
       //Mientras no haya cambio en los RFID, seguir con la lectura   
@@ -73,39 +77,15 @@ void loop() {
                 currentValue=i; 
                 buttonState[i] = LOW;
                 buttonchange = 0;
+                break;
                 
              }
-        } 
-        // Si el valor corresponde al que esperamos en la serie, incrementamos el nivel actual
-         if (currentValue == serie_array[j]){
-                j++;  
-                right = 1;
-                currentlevel++;
-                Serial.println("Coorecto aumenta 1");
-                Serial.println(currentlevel);
-                }
-           else {                                                     // si no es el correcto, marcamos el error y reiniciamos el nivel al 1 
-                right = 0;
-                blockedRFID[currentValue]= 1;
-                delay(300);
-                currentlevel = 1;
-                playSound(s[7]);
-                Serial.println("Error!!!");         
-                delay(500);
-                reset();
-                //salimos del while para iniciar un nuevo juego
-                break;                         
-            }
-            //si se llega al final de la secuencia el juego se ha ganado   
-            if (currentlevel > n_levels){
-              Serial.println("Ha ganado el juego");
-              playSound(s[9]);
-              delay(500);
-              openHole(); //Se abre el compartimiento secreto
-              currentlevel = 1;
-              
-             }       
+        }
+        push(currentValue);
+        printList();
+         
   }
+  
 }
 
 //--------FUNCTIONS--------//
@@ -187,6 +167,31 @@ bool verifyPresentTags(){
 }
 //--------END FUNCTIONS----//
 
+void push(int element){
+  int tmp;
+  for(int i=0; i<n_levels;i++){
+    inputSerie[i] = inputSerie[i+1];
+  }
+  inputSerie[n_levels-1] = element; 
+}
+
+void printList(){
+  Serial.println("");
+  Serial.print("List :");
+  for(int i=0; i<n_levels;i++){
+    Serial.print(inputSerie[i]);
+  }
+  Serial.print("");
+}
+
+bool compareSerie(){
+  for(int i=0; i<n_levels;i++){
+    if(inputSerie[i]!=serie_array[i]){
+      return false;
+    }
+  }
+  return true;
+}
 
 
 
