@@ -99,22 +99,32 @@ void loop() {
  ///////////////// SENSOR IR /////////////////
  
  
- infrarrojo estado(13);//DEFINICION DEL PIN DEL ARDUINO A USAR
-int VALOR;//VARIBLE QUE RECIBE EL DATO
+infrarrojo estado(13); //DEFINICION DEL PIN DEL ARDUINO A USAR
+
+infrarrojo estado2(11);
+ 
+int VALOR; //VARIBLES QUE RECIBE EL DATO
+int VALOR2;
 int led =12;//REDEFINICION DE PIN DE ARDUINO PARA LED INDICADOR DE PULSO(ESTO ES OPCIONAL)
 int led_estado;//VARIABLE
+int led_estado2;
 
 
 void setup() {
-pinMode(led,OUTPUT);//LED QUE INDICA EL ESTADO DEL LED
+pinMode(led,OUTPUT);//LED QUE INDICA EL ESTADO DEL LED, SI SE REALIZO CON EXITO
 Serial.begin(9600); //VELOCIDAD COMUNICACION SERIAL
 }
 //CODIGO PRINCIPAL
 void loop() {
-Serial.print("\n leyendo estado sensor: \n");//IMPRIME MENSAJE EN PC
+//Serial.print("\n leyendo estado sensor: \n");//IMPRIME MENSAJE EN PC
 Serial.print(estado.lectura(VALOR));//IMPRIME EL ESTADO DEL Vo DEL SENSOR MEDIANTE LA VARIABLE VALOR
+Serial.print(estado2.lectura(VALOR2));
+
+
 led_estado = estado.lectura(VALOR);//LED QUE RECOGE EL ESTADO DEL SENSOR
-if(led_estado == 1)// COMPARACION PARA ACTIVAR UN LED SEGUN EL ESTADO DEL SENSOR
+led_estado2 = estado.lectura(VALOR2);
+
+if((led_estado == 1) && (led_estado2 == 1))// COMPARACION PARA ACTIVAR UN LED SEGUN EL ESTADO DEL SENSOR
 {
   digitalWrite(led,HIGH);
 }
