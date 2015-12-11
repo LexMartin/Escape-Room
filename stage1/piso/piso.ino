@@ -94,10 +94,10 @@ void loop() {
         push(currentValue);
         //Se imprime la cola 
         printList();
-         
+        delay(1000);//Delay de la lectura
   }//fin del ciclo principal
   
-  //Se ingresó la serie correcta
+  //Se ingresó la serie correctam
   openHole();
   
 }
@@ -119,6 +119,7 @@ int readRFID(int value){
   int isPresent = gpio.gpioDigitalRead(value+8);
   int sound;
   if(!isCorrect && isPresent){
+     
       playSound(s[1]);
       push(9);
       printList();
