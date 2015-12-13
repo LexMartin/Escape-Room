@@ -109,6 +109,7 @@ bool getPresentPin(int index){
 }
 
 int getCodePin(int x){
+  Serial.println(x);
   int i = x*4;
   int result =0;
   int index =0;
@@ -118,12 +119,13 @@ int getCodePin(int x){
     Serial.print(value);
     if(value){
       result+= (int)pow(2,index);
+      Serial.print(result);
     }
     index++;
   }
-  //Serial.println("Resilt : ");
-  //Serial.print(result);
-  //Serial.println("");
+  Serial.println("Resilt : ");
+  Serial.print(result);
+  Serial.println("");
   return result;
   
 }
@@ -136,7 +138,8 @@ int readRFID(int value){
   int codePin = getCodePin(value);
   int isCorrect;
   //Serial.println(codePin);
-  Serial.println(isPresent);
+
+
   if(codePin == 7){
      isCorrect=1;//gpio.gpioDigitalRead(value);
   }

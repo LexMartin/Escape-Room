@@ -51,8 +51,8 @@ int readyLed = 6;                      //Led que nos dará señal que espera la 
 long previousMillis = 0;                //Variable para determinar el tiempo que ha pasado mientras el usuario no activa una entrada
 float umbrals[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 int correctUmbral[] = {0,0,0,0,0,0,0};
-
-int game_on = 0;
+int startButton = 17;
+int game_on = 1;
 int currentlevel = 0; // es el nivel actual, es decir el numero de entradas correctas del usuario
 int n_levels =_n_levels; //niveles (se asigna el valor de _n_levels a n_levels por cuestiones de crear la memoria dinámicamente)
 
@@ -86,7 +86,7 @@ void setup() {
     
   }
   pinMode(secretCompartment,OUTPUT);
-
+  pinMode(startButton,INPUT);
   //Iniciar la escala de los sensores
   
 
@@ -101,6 +101,8 @@ void setup() {
     
    }
    getUmbrals();
+
+   game_on = 0;
    
 }
 
@@ -109,14 +111,16 @@ void loop() {
  
 int i;
 int n_pin = sizeof(inputPin)/sizeof(int); // Número de pines que serán nuestras entradas y salidas
+
+game_on = digitalRead(startButton);
 //Iniciamos el juego
-if (game_on == 0){
+if (game_on == 1){
   digitalWrite(secretCompartment,LOW);
   getInitialArray(n_levels,n_pin);
   unsigned long currentMillisBegin = millis();
   previousMillis = currentMillisBegin;
 
-  game_on = 1; 
+  game_on = 0; 
 
 }
 
@@ -162,6 +166,7 @@ while (currentlevel < n_levels){
         Serial.println(currentlevel);
         unsigned long currentMillisOK = millis();
         previousMillis =currentMillisOK;
+        game_on = 0;
         
     }else{
         Serial.println("Error: ");
