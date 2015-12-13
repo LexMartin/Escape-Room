@@ -1,6 +1,14 @@
-//DO PROGRAM
 #include <SPI.h>
 #include <MFRC522.h>
+
+
+
+
+
+
+
+//DO PROGRAM
+
 
 //============ Parametros Configurables ============================
 
@@ -12,7 +20,7 @@
 // RE : C9 2A 82 9E
 // MI : 49 35 7B 9E / 0x19, 0x52, 0x85, 0x9e
 // FA : C9 5C 7C 9E
-byte value[] = {0xc9, 0x5c, 0x7c, 0x9e};
+byte value[] = {0x19, 0x52, 0x85, 0x9e};
 
 byte allTags[][4] = {
                      {0x29, 0x76, 0x7f, 0x9e}, //DO
@@ -93,8 +101,12 @@ void loop() {
 
     if ( ! mfrc522.PICC_IsNewCardPresent()){
         digitalWrite(PRESENT_PIN,LOW);
+        digitalWrite(FIRST_BIT,LOW);
+        digitalWrite(SECOND_BIT,LOW);
+        digitalWrite(THIRD_BIT,LOW);
         statusval[0] = 0;
         Serial.println("Present FALSE");
+        
         *buffer = *empty;
         return;
        

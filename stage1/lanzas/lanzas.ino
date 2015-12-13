@@ -94,10 +94,12 @@ bool compareSerie(){
 }
 bool readGpio(int index){
   if(index < 16){
-    return gpio.gpioDigitalRead(index);
+    if(gpio.gpioDigitalRead(index))  return true;
+    else return false;
   }
   else{
-    return gpio2.gpioDigitalRead(index);
+    if(gpio2.gpioDigitalRead(index)) return true;
+    else return false;
   }
 }
 
@@ -133,7 +135,7 @@ int readRFID(int value){
   int isPresent = getPresentPin(value);//gpio.gpioDigitalRead(value+8);
   int codePin = getCodePin(value);
   int isCorrect;
-  Serial.println(codePin);
+  //Serial.println(codePin);
   Serial.println(isPresent);
   if(codePin == 7){
      isCorrect=1;//gpio.gpioDigitalRead(value);
