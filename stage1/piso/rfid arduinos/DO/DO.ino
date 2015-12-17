@@ -8,11 +8,8 @@
 // Se toman en pares y en minisculas y se escriben precedudos por 0x
 // Ejemplo: Tag ID: 40EFF56A 29 76 7F 9E
 // byte value[] = {0x29, 0x76, 0x7f, 0x9e};
-// DO : 0x29, 0x76, 0x7f, 0x9e
-// RE : C9 2A 82 9E
-// MI : 49 35 7B 9E / 0x19, 0x52, 0x85, 0x9e
-// FA : C9 5C 7C 9E
-byte value[] = {0xc9, 0x5c, 0x7c, 0x9e};
+
+byte value[] = {0xc9, 0x5c, 0x7c, 0x9e}; // El valor de TAG que éste arduino espera y toma como válido
 
 
 // Puertos de salida hacia el Arduino Principal

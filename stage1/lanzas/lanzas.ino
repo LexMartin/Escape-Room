@@ -7,28 +7,28 @@
 /*-------------- CONFIGURACIONES -------------------------------*/
 
 const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
-const int _n_levels=4;                //Número de elementos que contendrá la serie para ganar el juego
+const int _n_levels=7;                //Número de elementos que contendrá la serie para ganar el juego
 const unsigned char s[] = {0x0001,0x0002,0x0003,0x0004,0x0005,0x0006,0x0007,0x0008,0x0009,0x0010};//Sonidos debe llevar el formato 0x + numero de indice a 4 digitos, (ej. para la primera es: 0x0001)
 int serie_array[]={0,1,2,3};    //es la secuancia estatica que necesitamos ingresar {DO,RE,MI,FA,SOL,LA,SI}
 /*--------------------------------------------------------------*/
 
 /** define mp3 class */
 MP3 mp3;
-pca9555 gpio2(0x27);
-pca9555 gpio(0x20);
+pca9555 gpio(0x27);
+pca9555 gpio2(0x20);
 Servo servo;
 // Variables
-int buttonState[] = {0,0,0,0};         // El estado actual de los botones
-int lastButtonState[] = {0,0,0,0};     // El estado previo de los botones
-int correctRFID[] = {0,0,0,0};
-int blockedRFID[]={0,0,0,0}; // Se bloquean los RFID que hayan tenido una lectura incorrecta, hasta que el tag no esté presente
+int buttonState[] = {0,0,0,0,0,0,0};         // El estado actual de los botones
+int lastButtonState[] = {0,0,0,0,0,0,0};     // El estado previo de los botones
+int correctRFID[] = {0,0,0,0,0,0,0};
+int blockedRFID[]={0,0,0,0,0,0,0}; // Se bloquean los RFID que hayan tenido una lectura incorrecta, hasta que el tag no esté presente
 int currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int hole = 0;                 //el compartimiento secreto está cerrado
 //Función que inicializa el vector de la serie y la variable currentValue
 int currentlevel = 1; // es el nivel actual, es decir el numero de entradas correctas del usuari
 int right = 0; //1 indica que el usuario ingresó un dato correcto , 0 indica que ha fallado
 int n_levels = _n_levels; //niveles (se asigna el valor de _n_levels a n_levels por cuestiones de crear la memoria dinámicamente)
-
+int binary[] = {1,2,4,8,16,32,64};
 void setup() {
   mp3.begin(MP3_SOFTWARE_SERIAL);    // select software serial
   /** set volum to the MAX */
@@ -57,17 +57,21 @@ void loop() {
   }//Si el compartimiento secreto está abierto NO se hace nada hasta el reicio
   //Iniciamos el juego
   Serial.println("nicio del juego");
-   while (!compareSerie()){
-      Serial.println("en el while");
+  while (!compareSerie()){
+      printStatus2();
      //Mientras no haya cambio en los RFID, seguir con la lectura   
       while (buttonchange == 0){
-        Serial.println("NO CAMBIA");
-        for (int i = currentlevel-1; i < 4; i = i+1){                 
+        printStatus2();
+        for (int i = 0; i < 7; i++){ 
+                               
                 buttonState[i] =readRFID(i);// digitalRead(i+2);
+                
                 buttonchange = buttonchange + buttonState[i];                  
             }
             delay(200);  
       }
+
+      delay(300);
        buttonchange=0;      
   }
   openHole();
@@ -78,7 +82,7 @@ void loop() {
 //-----Begin Reset function -----//
 // Reinicia los estados de los
 void reset(){
-  for(int i=0; i < 4;i++){
+  for(int i=0; i < 7;i++){
     lastButtonState[i] = 0;
     buttonState[i]=0;
   }
@@ -109,35 +113,29 @@ bool getPresentPin(int index){
 }
 
 int getCodePin(int x){
-  Serial.println(x);
   int i = x*4;
   int result =0;
   int index =0;
   bool value;
   for(int j=i+3;j>i;j--){
     value = readGpio(j);
-    Serial.print(value);
     if(value){
-      result+= (int)pow(2,index);
-      Serial.print(result);
+      result+= binary[index];//(int)pow(2,index);
     }
     index++;
-  }
-  Serial.println("Resilt : ");
-  Serial.print(result);
-  Serial.println("");
-  return result;
-  
+  } 
+  return result;  
 }
 
 // Lee los pines de tag correcto y tag presente
 int readRFID(int value){
   //printStatus2();
- 
+  
   int isPresent = getPresentPin(value);//gpio.gpioDigitalRead(value+8);
   int codePin = getCodePin(value);
   int isCorrect;
-  //Serial.println(codePin);
+
+  
 
 
   if(codePin == 7){
@@ -155,17 +153,18 @@ int readRFID(int value){
   //printStatus();
   if(!isPresent){
     blockedRFID[value] = 0;
+    correctRFID[value] = 0;
   }
   if(blockedRFID[value]== 1){
     return 0;   
   }
   if(isCorrect && isPresent){
-      playSound(s[value]);
+      playSound(s[value+1]);
       correctRFID[value] = 1;
+      blockedRFID[value] = 1;
    }
   if(!isCorrect && isPresent){
-      
-      playSound(s[codePin]);
+      playSound(s[codePin+1]);
       blockedRFID[value] = 1;
       correctRFID[value] = 0;
       //return 2;
@@ -214,8 +213,8 @@ void openHole()
 }
 
 bool verifyPresentTags(){
-  for(int i=0; i<n_levels;i++){
-      if(gpio.gpioDigitalRead(i+8)){
+  for(int i=0; i<7;i++){
+      if(getPresentPin(i)){
         return true;
       }
   }
