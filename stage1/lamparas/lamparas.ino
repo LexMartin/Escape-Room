@@ -19,8 +19,7 @@
 
 //-------------CONFIGURACIONES---------------------------------------------------------------------------------------------------------------//
 const int _n_levels=10;                //Número de elementos que contendrá la serie para ganar el juego
-int inputPin[] = {2,3,4,5};           //Declaración de las entradas que se usarán
-int ledPin[] = {22,24,26,28};            //Pines para los leds de la secuencia
+int ledPin[] = {22,24,26,28,30,32,34};            //Pines para los leds de la secuencia// Serán los relays para las lamparas
 long interval = 3 * 1000;                   //Intervalo de tiempo que se le permitirá al usuario entre cada entrada en ms
 const unsigned char s[] = {0x0001,0x0002,0x0003,0x0004,0x0005,0x0006,0x0007,0x0008,0x0009,0x0010};//Sonidos
 const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
@@ -44,14 +43,14 @@ const float Umbral=300.0;
 
 MP3 mp3;
 
-int buttonState[] = {0,0,0,0};         // El estado actual de los botones
-int lastButtonState[] = {0,0,0,0};     // El estado previo de los botones
+int buttonState[] = {0,0,0,0,0,0,0};         // El estado actual de los botones
+int lastButtonState[] = {0,0,0,0,0,0,0};     // El estado previo de los botones
 int serie_array[_n_levels],currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int readyLed = 6;                      //Led que nos dará señal que espera la entrada del usuario
 long previousMillis = 0;                //Variable para determinar el tiempo que ha pasado mientras el usuario no activa una entrada
 float umbrals[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 int correctUmbral[] = {0,0,0,0,0,0,0};
-int startButton = 17;
+int startButton = 17; //Entrada para iniciar y reiniciar el juego (taza) ya sea con sensor hall o con sensor IR
 int game_on = 1;
 int currentlevel = 0; // es el nivel actual, es decir el numero de entradas correctas del usuario
 int n_levels =_n_levels; //niveles (se asigna el valor de _n_levels a n_levels por cuestiones de crear la memoria dinámicamente)
@@ -64,13 +63,13 @@ void setup() {
   mp3.volume(0x1F);
   randomSeed(analogRead(0)); //semilla para el pseudorandom
   //inicializamos las entradas y salidas
-  for(int x = 0; x < 4; x=x+1)
+  for(int x = 0; x < 7; x=x+1)
   {
-    pinMode(inputPin[x],INPUT);
+    
     pinMode(ledPin[x],OUTPUT);
   }
 
-  for(int x = 0; x < 4; x++)
+  for(int x = 0; x < 7; x++)
   { 
     digitalWrite(ledPin[x],HIGH);
     //delay(400);
@@ -78,7 +77,7 @@ void setup() {
     
   }
   delay(400);
-  for(int x = 0; x < 4; x++)
+  for(int x = 0; x < 7; x++)
   { 
     //digitalWrite(ledPin[x],HIGH);
     //delay(400);
@@ -110,7 +109,7 @@ void setup() {
 void loop() {
  
 int i;
-int n_pin = sizeof(inputPin)/sizeof(int); // Número de pines que serán nuestras entradas y salidas
+int n_pin = 7 // Número de pines que serán nuestras entradas y salidas
 
 game_on = digitalRead(startButton);
 //Iniciamos el juego
@@ -120,7 +119,7 @@ if (game_on == 1){
   unsigned long currentMillisBegin = millis();
   previousMillis = currentMillisBegin;
 
-  game_on = 0; 
+  game_on = digitalRead(startButton);
 
 }
 
@@ -214,6 +213,7 @@ while (currentlevel < n_levels){
          */    
     }
     winner();
+    game_on =0;
  
 }//main loop
 
