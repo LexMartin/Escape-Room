@@ -2,15 +2,35 @@
 #include <pca9555.h>
 
 
-
 /*
-
 Automatizacion - discos magneticos
 Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
+/* MATERIALES
+1 ARDUINO
+1 GPIO
+2 LED
+1 RELAY o CIRCUITO MOSFET
+16 SENSORES HALL
+*/
 
+/*CABLES para poder montarlo en una PROTOBOARD
+Jumpers:
+M-M: MACHO A MACHO
+M-H: MACHO A HEMBRA
+H-H: HEMBRA A HEMBRA
+ 
+ #cables | #hilos 
+   16    |   3    H-H para conectar sensores hall
+    1    |   2    M-M para conectar tierra y corriente
+    1    |   4    M-H para conectar GPIO con arduino
+    2    |   2    H-H para conectar LEDs
+ 
+*/
+
+// GPIO
 pca9555 gpio1(0x20);
 
 int* entradasPin = new int [16];
@@ -28,7 +48,7 @@ void setup() {
     
     Serial.begin(38400);
     delay(100);
-    gpio1.begin();//x.begin(true) will override automatic SPI initialization
+    gpio1.begin();
 
     
     
@@ -41,7 +61,7 @@ void setup() {
 
 void loop() {
        
-   //Serial.println("incio del LOOP");
+ 
    Serial.println(compararTodo());
    if(compararTodo()){
    digitalWrite(correcto, HIGH);

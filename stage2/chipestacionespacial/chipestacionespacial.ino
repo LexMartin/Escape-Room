@@ -1,11 +1,42 @@
 
 /*
-
 Automatizacion - chip, estacion espacial
 Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
+/* MATERIALES
+1 ARDUINOS
+6 SENSORES HALL
+2 LEDS
+1 SOLENOIDE CERRADURA
+1 CIRCUITOS MOSFET
+
+*/
+
+
+/*  CABLES para montar en PROTOBOARD
+Cables para UN solo sarcofago, usar dos veces la lista para el segundo.
+
+
+Jumpers:
+M-M: MACHO A MACHO
+M-H: MACHO A HEMBRA
+H-H: HEMBRA A HEMBRA
+
+
+
+#CABLES | #HILOS | 
+  2          2      M-M para corriente y tierra del protoboard, puente de protoboard
+  6          3      M-H para sensores hall
+  2          1      M-M para leds
+  1          3      M-H para mosfet
+  1          2      M-M para solenoide (no olvide los cables
+                  para la conectarlo con la fuente de 12v)
+  
+
+  
+*/
 
 
 
