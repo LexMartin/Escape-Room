@@ -1,4 +1,6 @@
 #include <infrarrojo.h>
+// ES IMPORTANTE TENER LA LIBRERIA INFRARROJO.H para el manejo de los sensores IR
+
 
 /*
 
@@ -7,107 +9,36 @@ Created by Cindy Canul Canul & Cristian Kumul Uc
 E-mail: cindycanul92@gmail.com, cristiankumul@gmail.com
 */
 
- /*
-///////////////// SENSOR HALL //////////////////
+/* MATERIALES
+1 ARDUINO
+2 SENSOR IR
+1 LED
+*/
+
+/*CABLES para poder montarlo en una PROTOBOARD
+Jumpers:
+M-M: MACHO A MACHO
+M-H: MACHO A HEMBRA
+H-H: HEMBRA A HEMBRA
  
-// Esta parte es en caso de usar sensores hall
-
-// Variables, el numero descrito es el PIN a utilizar en la placa arduino.
-// El numero no necesariamente tiene que ser el que esta descrito aqui, puede ser diferente.
-
-int bolaDeGolf = 3;
-int bolaDeGolf1 = 4; // esta en caso de seguridad
-
-
-// validacion del juego
-int tanqueLleno = 13;
-int tanqueNoLleno = 2;
-
-
-
-// variables para guardar
-int temp1 = 0;
-int temp2 = 0;
-
-// INPUTS AND OUTPUTS, entradas y salidas
-// para declarar la entra o salida del PIN
-
-void setup() {
-  // entradas
-  pinMode(bolaDeGolf, INPUT); 
-  pinMode(bolaDeGolf1, INPUT); 
-
-  // salidas
-  pinMode(tanqueLleno, OUTPUT);  
-  pinMode(tanqueNoLleno, OUTPUT);  
-
+ #cables | #hilos 
+    2    |   3    M-M para conectar sensores IR
+    1    |   1    M-M para conectar led indicador
+    1    |   2    M-M para conectar tierra y corriente
  
-  
-  Serial.begin(9600); 
-
-}
-
-void loop() {
-  
-    temp1 = digitalRead(bolaDeGolf);           temp2 = digitalRead(bolaDeGolf1);  
- 
-  if(comparePairs(bolaDeGolf,bolaDeGolf1)){
-  digitalWrite(tanqueLleno, HIGH);
-  digitalWrite(tanqueNoLleno, LOW);
-  
-  }
-  else{
-  digitalWrite(tanqueNoLleno, HIGH);
-  digitalWrite(tanqueLleno, LOW);
-
-  
-  }
-  
-  
-  
-}// loop
-
-  
- // THIS FUNCTION IS FOR HALL SENSOR
-  bool getHallValue(int x){
-    if (digitalRead(x)) return true;
-    else return false;
-  }
-  
-  bool comparePairs(int x, int y)
-  {
-    if(getHallValue(x) == true || getHallValue(y) == true ) 
-    return true;
-    else 
-    return false;
-  }
-  
-  
- */
- 
- 
- /*
- 1 sensor IR 
- 
- 
- 
- 
- */
- 
- 
+*/ 
  
  ///////////////// SENSOR IR /////////////////
  
  
-infrarrojo estado(13); //DEFINICION DEL PIN DEL ARDUINO A USAR
-
-infrarrojo estado2(11);
+infrarrojo estado(7); // Definir PIN a usar para sensor IR 
+infrarrojo estado2(8); // Definir PIN a usar para segundo sensor IR 
  
-int VALOR; //VARIBLES QUE RECIBE EL DATO
-int VALOR2;
-int led =12;//REDEFINICION DE PIN DE ARDUINO PARA LED INDICADOR DE PULSO(ESTO ES OPCIONAL)
-int led_estado;//VARIABLE
-int led_estado2;
+int VALOR; //valor para lectura del primer sensor IR
+int VALOR2; //valor para lectura del segundo sensor IR
+int led = 6;// MENSAJE EN ESTADO = 1 que se enviara a la central principal
+int led_estado; // variable para sensor
+int led_estado2;// varible para sensor
 
 
 void setup() {
@@ -118,21 +49,24 @@ Serial.begin(9600); //VELOCIDAD COMUNICACION SERIAL
 void loop() {
 //Serial.print("\n leyendo estado sensor: \n");//IMPRIME MENSAJE EN PC
 Serial.print(estado.lectura(VALOR));//IMPRIME EL ESTADO DEL Vo DEL SENSOR MEDIANTE LA VARIABLE VALOR
-Serial.print(estado2.lectura(VALOR2));
+Serial.print(estado2.lectura(VALOR2));  // Vo segundo sensor
+
+led_estado = estado.lectura(VALOR); // lectura del sensor IR
+led_estado2 = estado.lectura(VALOR2); // lectura del segundo sensor IR
 
 
-led_estado = estado.lectura(VALOR);//LED QUE RECOGE EL ESTADO DEL SENSOR
-led_estado2 = estado.lectura(VALOR2);
+// LECTURA PARA SENSOR IR
 
-if((led_estado == 1) && (led_estado2 == 1))// COMPARACION PARA ACTIVAR UN LED SEGUN EL ESTADO DEL SENSOR
+if((led_estado == 0) && (led_estado2 == 0))// COMPARACION PARA ACTIVAR UN LED SEGUN EL ESTADO DEL SENSOR
 {
-  digitalWrite(led,HIGH);
+  digitalWrite(led,HIGH); //<---
+  // señal que se envia a la centrar principal
 }
-else
+else 
 {
   digitalWrite(led,LOW);
 }
-delay(100);
+
 
 }
 
