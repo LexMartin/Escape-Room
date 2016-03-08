@@ -20,13 +20,18 @@
 // RE : C9 2A 82 9E
 // MI : 49 35 7B 9E / 0x19, 0x52, 0x85, 0x9e
 // FA : C9 5C 7C 9E
+
+//Value es el UID del TAG que se quiere grabar en el arduino osea una nota musical
 byte value[] = {0x19, 0x52, 0x85, 0x9e};
 
+//Aqui se colocan todos lo UID de las notas musicales, siguiendo el formato
 byte allTags[][4] = {
                      {0x29, 0x76, 0x7f, 0x9e}, //DO
                      {0xc9, 0x2a, 0x82, 0x9e}, //RE
                      {0x19, 0x52, 0x85, 0x9e}, //MI
-                     {0xc9, 0x5c, 0x7c, 0x9e}, //FA
+                     {0xc9, 0x5c, 0x7c, 0x9e}, //SOL
+                     {0xc9, 0x5c, 0x7c, 0x9e}, //LA
+                     {0xc9, 0x5c, 0x7c, 0x9e}, //SI
                    };
 
 
