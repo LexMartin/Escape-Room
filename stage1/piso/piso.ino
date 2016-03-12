@@ -54,7 +54,6 @@ void setup() {
   gpio.begin();//
   gpio.gpioPinMode(INPUT);
   pinMode(3, INPUT);   //PIN PARA MOSFET
-  servo.write(0);
   reset();
 }
 
