@@ -1,6 +1,7 @@
-
 #include <Wire.h>
 #include <pca9555.h>
+
+
 
 
 
@@ -40,12 +41,14 @@ H-H: HEMBRA A HEMBRA
 
 pca9555 gpio1(0x20);
 pca9555 gpio2(0x25);
-pca9555 gpio3(0x27);
+//ca9555 gpio3(0x27);
 
 // Variables, el numero descrito es el PIN a utilizar en la placa arduino.
 
-int* entradasPin = new int [35];
+int* entradasPin = new int [31];
 int relay = 3;
+int correctoLed = 4;
+int incorrectoLed = 5;
 
 // INPUTS AND OUTPUTS, entradas y salidas
 // para declarar la entra o salida del PIN
@@ -58,27 +61,35 @@ void setup() {
     delay(100);
     gpio1.begin();//x.begin(true) will override automatic SPI initialization
     gpio2.begin();
-    gpio3.begin();
+  //  gpio3.begin();
     
     
     
   // entradas
    gpio1.gpioPinMode(INPUT);
    gpio2.gpioPinMode(INPUT);
+
+  //salidas
+
+  pinMode(relay, OUTPUT);  
+  pinMode(correctoLed, OUTPUT);  
+  pinMode(incorrectoLed, OUTPUT);  
+
+   
    //gpio3.gpioPinMode(INPUT);
   
-   for(int i=0;i<=15;i++){
-     if(i < 4){
-       gpio3.gpioPinMode(i,INPUT);
-     
-     
-     }else if(i>=4 && i<6){
-      gpio3.gpioPinMode(i,OUTPUT);     
-     
-     }
-   
-   
-   }
+//   for(int i=0;i<=15;i++){
+//     if(i < 4){
+//       gpio3.gpioPinMode(i,INPUT);
+//     
+//     
+//     }else if(i>=4 && i<6){
+//      gpio3.gpioPinMode(i,OUTPUT);     
+//     
+//     }
+//   
+//   
+//   }
   
 
   Serial.begin(9600); 
@@ -92,8 +103,8 @@ void loop() {
    //Serial.println("incio del LOOP");
    Serial.println(compararTodo());
    if(compararTodo()){
-     gpio3.gpioDigitalWrite(4,HIGH);
-     gpio3.gpioDigitalWrite(5,LOW);
+     digitalWrite(correctoLed,HIGH);
+     digitalWrite(incorrectoLed,LOW);
      digitalWrite(relay, HIGH);
      //temp = true;
      
@@ -101,8 +112,8 @@ void loop() {
    
    }else{
      
-     gpio3.gpioDigitalWrite(4,LOW);
-     gpio3.gpioDigitalWrite(5,HIGH);
+     digitalWrite(correctoLed,LOW);
+     digitalWrite(incorrectoLed,HIGH);
       //temp = false;
      digitalWrite(relay, LOW);
    }
@@ -121,14 +132,10 @@ bool getHallValue(int x){
     {
       if(gpio2.gpioDigitalRead(x-16)) return true;
       else return false; 
-    }
-    else if(x >= 32)
-    {
-      if(gpio3.gpioDigitalRead(x-32)) return true;
-      else return false;
-    }
-    
+    } 
   }
+
+  
   
   bool compararTodo()
   {
@@ -136,7 +143,7 @@ bool getHallValue(int x){
     bool variable = false;
     int foo = 0;
     int a,b;
-    for(int i=1;i<=35;i=i+2){
+    for(int i=1;i<=31;i=i+2){
    
       a =getHallValue(i);
       b=getHallValue(i-1);
