@@ -36,7 +36,7 @@ const int restartDelay = 3 * 1000; //tiempo de reinicio del juego
 
 MP3 mp3;
 pca9555 gpio(0x27);
-Servo servo;
+//Servo servo;
 // Variables no configurables
 int buttonState[] = {0,0,0,0};         // El estado actual de los botones
 int currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
@@ -53,7 +53,7 @@ void setup() {
   delay(100);
   gpio.begin();//
   gpio.gpioPinMode(INPUT);
-  servo.attach(3);
+  pinMode(3, INPUT);   //PIN PARA MOSFET
   servo.write(0);
   reset();
 }
@@ -149,9 +149,9 @@ void openHole()
 {
   hole = 1; // se abre el compartimiento secreto
   Serial.println("Se abre el compartimiento, juego ganado");
-  servo.write(OPEN);
+  digitalWrite(3,HIGH);
   delay(servoDelay);
-  servo.write(CLOSE);
+  digitalWrite(3,HIGH);
 }
 
 
