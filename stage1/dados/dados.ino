@@ -4,7 +4,10 @@
 #include <Servo.h>
 
 /*--------------Configuraciones ------------------------*/
-#define  servoPin 3 // Pin del Output del Servo   
+#define  ledC 1 // Pin del Output Lampara Compartimento secreto  
+#define  led1 2 // Pin del Output Lampara 1  
+#define  led2 3 // Pin del Output Lampara 2
+ 
 #define Cerradura  4 //Pin de salida para la CERRADURA
 
 byte value[] = {0x44, 0x49, 0x43, 0x45}; // D,I,C,E  
@@ -14,6 +17,8 @@ const int servoDelay = 1 * 1000; // tiempo apertura cierre del Servo
 
 const int OPEN = 180; //Angulo de apertura del Servo
 const int CLOSE = 0; // Angulo de Cierre del Servo
+
+
 /*------------------------------------------------------*/
 
 
@@ -48,8 +53,9 @@ void setup() {
     for (byte i = 0; i < 6; i++) {
         key.keyByte[i] = 0xFF;
     }
-    int servoPos = 0;
-    servo.attach(servoPin);
+    
+    pinMode(led1,OUTPUT);
+    pinMode(led2,OUTPUT);    
     pinMode(Cerradura,OUTPUT);
     digitalWrite(Cerradura,LOCK);
     
@@ -59,6 +65,9 @@ void setup() {
  * Main loop.
  */
 void loop() {
+
+    //set HIGH leds
+    actionLeds(HIGH);
     // Look for new cards
     if ( ! mfrc522.PICC_IsNewCardPresent())
         return;
@@ -99,12 +108,16 @@ void loop() {
     // Stop encryption on PCD
     mfrc522.PCD_StopCrypto1();
 }
-
+void actionLeds(bool value){
+  digitalWrite(led1,value);
+  digitalWrite(led2,value);
+  digitalWrite(ledC,!value);
+}
 void throwBack()
 {
   Serial.println("Tirar de nuevo");
   digitalWrite(Cerradura,LOCK);
- 
+  actionLeds(HIGH);
   servo.write(OPEN);
   delay(servoDelay);
   servo.write(CLOSE);
@@ -114,6 +127,8 @@ void throwBack()
 void winner()
 {
   Serial.println("GANADOR");
+  //SE apagan los leds
+  actionLeds(LOW);
   digitalWrite(Cerradura,UNLOCK);
   delay(timeWinner);
   throwBack();
