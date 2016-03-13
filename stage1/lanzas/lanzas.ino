@@ -2,7 +2,7 @@
 #include <pca9555.h>
 #include <SoftwareSerial.h>
 #include <MP3.h>
-#include <Servo.h>
+
 
 /*-------------- CONFIGURACIONES -------------------------------*/
 
@@ -10,13 +10,13 @@ const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
 const int _n_levels=7;                //Número de elementos que contendrá la serie para ganar el juego
 const unsigned char s[] = {0x0001,0x0002,0x0003,0x0004,0x0005,0x0006,0x0007,0x0008,0x0009,0x0010};//Sonidos debe llevar el formato 0x + numero de indice a 4 digitos, (ej. para la primera es: 0x0001)
 int serie_array[]={0,1,2,3};    //es la secuancia estatica que necesitamos ingresar {DO,RE,MI,FA,SOL,LA,SI}
+const int solenoide = 3;
 /*--------------------------------------------------------------*/
 
 /** define mp3 class */
 MP3 mp3;
 pca9555 gpio(0x27);
 pca9555 gpio2(0x20);
-Servo servo;
 // Variables
 int buttonState[] = {0,0,0,0,0,0,0};         // El estado actual de los botones
 int lastButtonState[] = {0,0,0,0,0,0,0};     // El estado previo de los botones
@@ -40,8 +40,8 @@ void setup() {
   gpio2.begin();//
   gpio.gpioPinMode(INPUT);
   gpio2.gpioPinMode(INPUT);
-  servo.attach(3);
-  servo.write(0);
+  pinMode(solenoide, INPUT);   
+
   reset();
 }
 
@@ -59,6 +59,7 @@ void loop() {
   Serial.println("nicio del juego");
   while (!compareSerie()){
       printStatus2();
+      digitalWrite(solenoide,LOW);
      //Mientras no haya cambio en los RFID, seguir con la lectura   
       while (buttonchange == 0){
         printStatus2();
@@ -209,7 +210,8 @@ void openHole()
 {
   hole = 1; // se abre el compartimiento secreto
   Serial.println("Se abre el compartimiento, juego ganado");
-  servo.write(90);
+  digitalWrite(solenoide,HIGH);//SOLENOIDE ON
+  //servo.write(90);
 }
 
 bool verifyPresentTags(){
