@@ -38,18 +38,18 @@ HX711 Peso4(A9, A8);
 HX711 Peso5(A11, A10);
 HX711 Peso6(A13, A12);
 HX711 Peso7(A15, A14);
-HX711 sensors[] = {Peso1,Peso2,Peso3,Peso4,Peso5,Peso6,Peso7};
+HX711 sensors[] = {Peso1,Peso2,Peso3,Peso4,Peso5};
 const float Umbral=300.0;
 
 MP3 mp3;
 
-int buttonState[] = {0,0,0,0,0,0,0};         // El estado actual de los botones
-int lastButtonState[] = {0,0,0,0,0,0,0};     // El estado previo de los botones
+int buttonState[] = {0,0,0,0,0};         // El estado actual de los botones
+int lastButtonState[] = {0,0,0,0,0};     // El estado previo de los botones
 int serie_array[_n_levels],currentValue; //vectores donde se almacenará la serie y currentValue es donde almacenaremos el valor de la selección del usuario en tiempo de ejecución
 int readyLed = 6;                      //Led que nos dará señal que espera la entrada del usuario
 long previousMillis = 0;                //Variable para determinar el tiempo que ha pasado mientras el usuario no activa una entrada
-float umbrals[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-int correctUmbral[] = {0,0,0,0,0,0,0};
+float umbrals[] = {0.0,0.0,0.0,0.0,0.0};
+int correctUmbral[] = {0,0,0,0,0};
 int startButton = 17; //Entrada para iniciar y reiniciar el juego (taza) ya sea con sensor hall o con sensor IR
 int game_on = 1;
 int currentlevel = 0; // es el nivel actual, es decir el numero de entradas correctas del usuario
@@ -91,6 +91,7 @@ void setup() {
 
  
   // iniciamos la comunicación serial para imprimir por la salida estandar
+
   Serial.begin(9600); 
 
      float cal2 = 0;
@@ -109,7 +110,7 @@ void setup() {
 void loop() {
  
 int i;
-int n_pin = 7 // Número de pines que serán nuestras entradas y salidas
+int n_pin = 5; // Número de pines que serán nuestras entradas y salidas
 
 game_on = digitalRead(startButton);
 //Iniciamos el juego
@@ -220,7 +221,7 @@ while (currentlevel < n_levels){
 //FUNCTIONS--------------------
 void winner(){
   Serial.println("Ha ganado el juego");
-  digitalWrite(secretCompartment,LOW);
+  digitalWrite(secretCompartment,HIGH);
   delay(2000);
 }
 void playSound(char sound){
@@ -303,6 +304,9 @@ void waitPin(int n,int led)
   }
 }
 
+bool verifySensor(){
+  return true;
+}
 void getUmbrals(){
    float cal2 = 0;
    for (int i = 0; i < 7; i++){
