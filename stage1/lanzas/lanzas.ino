@@ -103,7 +103,7 @@ bool readGpio(int index){
     else return false;
   }
   else{
-    if(gpio2.gpioDigitalRead(index)) return true;
+    if(gpio2.gpioDigitalRead(index-16)) return true;
     else return false;
   }
 }
@@ -130,31 +130,17 @@ int getCodePin(int x){
 
 // Lee los pines de tag correcto y tag presente
 int readRFID(int value){
-  //printStatus2();
-  
+  //printStatus2(); 
   int isPresent = getPresentPin(value);//gpio.gpioDigitalRead(value+8);
   int codePin = getCodePin(value);
-  int isCorrect;
-
-  
-
-
-  if(codePin == 7){
-     isCorrect=1;//gpio.gpioDigitalRead(value);
-  }
-  else{
-     isCorrect=0;
-  }
- 
-
-  
-  int sound;
-
-  
+  int isCorrect, sound;
+  isCorrect = codePin == 7 ? 1:0;  
   //printStatus();
   if(!isPresent){
     blockedRFID[value] = 0;
     correctRFID[value] = 0;
+  }else{
+    printPresentCode(value,codePin);
   }
   if(blockedRFID[value]== 1){
     return 0;   
@@ -180,9 +166,25 @@ int readRFID(int value){
   }
 }
 
+void printPresentCode(int x,int calculate){
+  int i = x*4;
+  int result;
+  int index =0;
+  int value;
+  Serial.println("");
+  for(int j=i+3;j>i;j--){
+    value = readGpio(j) ? 1:0;
+    Serial.print(value);
+    index++;
+  } 
+  Serial.print("  :  ");
+  Serial.print(calculate);
+  Serial.println("");
+  
+}
 void printStatus2(){
   Serial.println("");
-  for(int i=0; i< 4; i++){
+  for(int i=0; i< 8; i++){
     Serial.print(correctRFID[i]);
     Serial.print("");
   }
@@ -191,7 +193,7 @@ void printStatus2(){
 
 void printStatus(){
   Serial.println("");
-  for(int i=0; i< 4; i++){
+  for(int i=0; i< 8; i++){
     Serial.print(blockedRFID[i]);
     Serial.print("");
   }

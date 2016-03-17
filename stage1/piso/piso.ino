@@ -53,7 +53,7 @@ void setup() {
   delay(100);
   gpio.begin();//
   gpio.gpioPinMode(INPUT);
-  pinMode(3, INPUT);   //PIN PARA MOSFET
+  pinMode(3, OUTPUT);   //PIN PARA MOSFET
   reset();
 }
 
@@ -93,7 +93,8 @@ void loop() {
         push(currentValue);
         //Se imprime la cola 
         printList();
-        delay(1000);//Delay de la lectura
+        delay(2000);/
+        /Delay de la lectura
   }//fin del ciclo principal
   
   //Se ingresó la serie correctam
