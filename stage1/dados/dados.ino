@@ -18,7 +18,7 @@ int timeWinner = 2 * 1000;  // Segundos antes de reiniciar el juego
 const int servoDelay = 2 * 1000; // tiempo apertura cierre del Servo
 
 const int OPEN = 100; //Angulo de apertura del Servo
-const int CLOSE = 7; // Angulo de Cierre del Servo
+const int CLOSE = 10; // Angulo de Cierre del Servo
 /*------------------------------------------------------*/
 
 
@@ -55,12 +55,17 @@ void setup() {
     }
     int servoPos = 0;
     servo.attach(servoPin);
+    servo.write(OPEN);
     servo.write(CLOSE);
     pinMode(lampara1,OUTPUT);
     pinMode(lampara2,OUTPUT);  
     pinMode(lampara3,OUTPUT);  
     pinMode(Cerradura,OUTPUT);
     digitalWrite(Cerradura,LOCK);
+
+  
+   // delay(300);
+    servo.write(CLOSE);
     
 }
 
@@ -120,6 +125,7 @@ void throwBack()
   Serial.println("Tirar de nuevo");
   digitalWrite(Cerradura,LOCK);
   actionLeds(HIGH);
+  delay(servoDelay);
   servo.write(OPEN);
   delay(servoDelay);
   servo.write(CLOSE);
