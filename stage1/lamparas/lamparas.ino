@@ -179,6 +179,7 @@ while (currentlevel < n_levels){
         mp3.stop(); 
         j = 0;
         delay(30);
+        break;
     }
 
     if(j == 1 ){
@@ -213,16 +214,20 @@ while (currentlevel < n_levels){
          }
          */    
     }
-    winner();
+    winner(currentlevel);
     game_on =0;
  
 }//main loop
 
 //FUNCTIONS--------------------
-void winner(){
-  Serial.println("Ha ganado el juego");
-  digitalWrite(secretCompartment,HIGH);
-  delay(2000);
+void winner(int currentLevel){
+  if(currentLevel == n_levels)
+  {
+    Serial.println("Ha ganado el juego");
+    digitalWrite(secretCompartment,HIGH);
+    delay(2000);
+   }
+   digitalWrite(secretCompartment,LOW);
 }
 void playSound(char sound){
   if(soundStorage==0){

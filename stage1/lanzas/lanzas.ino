@@ -86,6 +86,8 @@ void reset(){
   for(int i=0; i < 7;i++){
     lastButtonState[i] = 0;
     buttonState[i]=0;
+    correctRFID[i] = 0;//{0,0,0,0,0,0,0};
+    blockedRFID[i]=0;//{0,0,0,0,0,0,0};
   }
 }
 //--- End Reset
