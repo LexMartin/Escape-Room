@@ -4,6 +4,7 @@
 #include "HX711.h"
 #include <SoftwareSerial.h>
 #include <MP3.h>
+#include <infrarrojo.h>
 
 
 /** define mp3 class */
@@ -24,6 +25,7 @@ long interval = 3 * 1000;                   //Intervalo de tiempo que se le perm
 const unsigned char s[] = {0x0001,0x0002,0x0003,0x0004,0x0005,0x0006,0x0007,0x0008,0x0009,0x0010};//Sonidos
 const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
 int secretCompartment = 35;
+int pinProximitySensor = 13; // El pin donde estará el sensor de proximidad
 //------------/CONFIGURACIONES---------------------------------------------------------------------------------------------------------------//
 
 
@@ -42,6 +44,7 @@ HX711 sensors[] = {Peso1,Peso2,Peso3,Peso4,Peso5};
 const float Umbral=300.0;
 
 MP3 mp3;
+infrarrojo estado(pinProximitySensor);// Se instancia para el infrarrojo 
 
 int buttonState[] = {0,0,0,0,0};         // El estado actual de los botones
 int lastButtonState[] = {0,0,0,0,0};     // El estado previo de los botones
@@ -52,9 +55,10 @@ float umbrals[] = {0.0,0.0,0.0,0.0,0.0};
 int correctUmbral[] = {0,0,0,0,0};
 int startButton = 17; //Entrada para iniciar y reiniciar el juego (taza) ya sea con sensor hall o con sensor IR
 int game_on = 1;
+int presentSensor = 0;
 int currentlevel = 0; // es el nivel actual, es decir el numero de entradas correctas del usuario
 int n_levels =_n_levels; //niveles (se asigna el valor de _n_levels a n_levels por cuestiones de crear la memoria dinámicamente)
-
+int VALOR;//VARIBLE QUE RECIBE EL  SENSOR
 
 
 void setup() {
@@ -111,8 +115,8 @@ void loop() {
  
 int i;
 int n_pin = 5; // Número de pines que serán nuestras entradas y salidas
-
-game_on = digitalRead(startButton);
+//VALIDACIÓN DEL SENSOR
+verifySensor();
 //Iniciamos el juego
 if (game_on == 1){
   digitalWrite(secretCompartment,LOW);
@@ -123,10 +127,6 @@ if (game_on == 1){
   game_on = digitalRead(startButton);
 
 }
-
-
-
-
 i = 0;
 int buttonchange = 0;   
 mp3.stop(); 
@@ -309,8 +309,22 @@ void waitPin(int n,int led)
   }
 }
 
-bool verifySensor(){
-  return true;
+void verifySensor(){
+  while(presentSensor==1){
+     presentSensor =  getProximitySensor() ? 1:0;
+     delay(300);
+  }
+  while(game_on == 0 && presentSensor == 0){
+      if(getProximitySensor()){
+          game_on = 1;
+          presentSensor =1;
+          }
+        delay(300);
+  }
+
+}
+bool getProximitySensor(){
+  return estado.lectura(VALOR)?false:true;
 }
 void getUmbrals(){
    float cal2 = 0;
