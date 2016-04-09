@@ -26,6 +26,7 @@ const unsigned char s[] = {0x0001,0x0002,0x0003,0x0004,0x0005,0x0006,0x0007,0x00
 const int soundStorage = 0; //almacenamiento de los sonidos , 0:USB , 1:SD
 int secretCompartment = 35;
 int pinProximitySensor = 13; // El pin donde estará el sensor de proximidad
+int campfire = 8; // Es el pin para la fogata
 //------------/CONFIGURACIONES---------------------------------------------------------------------------------------------------------------//
 
 
@@ -90,6 +91,7 @@ void setup() {
   }
   pinMode(secretCompartment,OUTPUT);
   pinMode(startButton,INPUT);
+  pinMode(campfirem,OUTPUT); //Fogata como salida
   //Iniciar la escala de los sensores
   
 
@@ -107,6 +109,7 @@ void setup() {
    getUmbrals();
 
    game_on = 0;
+   digitalWrite(campfire, LOW);
    
 }
 
@@ -120,6 +123,7 @@ verifySensor();
 //Iniciamos el juego
 if (game_on == 1){
   digitalWrite(secretCompartment,LOW);
+  digitalWrite(campfire,LOW);
   getInitialArray(n_levels,n_pin);
   unsigned long currentMillisBegin = millis();
   previousMillis = currentMillisBegin;
@@ -133,8 +137,10 @@ mp3.stop();
 int j = 0; //la posición actual de la serie
 currentlevel = 0;
 while (currentlevel < n_levels){
+  
   Serial.println("CurrentLEVEL");
   Serial.println(currentlevel);
+  digitalWrite(campfire,HIGH);
   bool currentSensorValue =readPIR(serie_array[j]);
   bool correct = true;
   while(HIGH){      
@@ -225,9 +231,11 @@ void winner(int currentLevel){
   {
     Serial.println("Ha ganado el juego");
     digitalWrite(secretCompartment,HIGH);
+    digitalWrite(campfire,LOW);
     delay(2000);
    }
    digitalWrite(secretCompartment,LOW);
+   //digitalWrite(campfire,HIGH);
 }
 void playSound(char sound){
   if(soundStorage==0){
