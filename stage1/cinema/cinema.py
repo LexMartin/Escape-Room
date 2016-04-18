@@ -40,16 +40,16 @@ io.pinMode(9,io.INPUT) #MASCARA DOS
 io.pinMode(7,io.INPUT) #MASCARA TRES
 
 
-io.pinMode(15,io.INPUT) #MASCARA UNO - RESPALDO
-io.pinMode(16,io.INPUT) #MASCARA DOS - RESPALDO
-io.pinMode(1,io.INPUT) #MASCARA TRES - RESPALDO
+#io.pinMode(15,io.INPUT) #MASCARA UNO - RESPALDO
+#io.pinMode(16,io.INPUT) #MASCARA DOS - RESPALDO
+#io.pinMode(1,io.INPUT) #MASCARA TRES - RESPALDO
 
 ################# SALIDAS   ######################
 
 
-io.pinMode(0,io.OUTPUT) #vibrador de mascaras uno
-io.pinMode(2,io.OUTPUT) #vibrador de mascaras dos
-io.pinMode(3,io.OUTPUT) #vibrador de mascaras tres
+#io.pinMode(0,io.OUTPUT) #vibrador de mascaras uno
+#io.pinMode(2,io.OUTPUT) #vibrador de mascaras dos
+#io.pinMode(3,io.OUTPUT) #vibrador de mascaras tres
 
 io.pinMode(4,io.OUTPUT) #luz
 
@@ -58,11 +58,13 @@ io.pinMode(5,io.OUTPUT) #ventana que se abre
 io.pinMode(12,io.OUTPUT) #ojos1
 io.pinMode(13,io.OUTPUT) #ojos1
 
-io.pinMode(21,io.OUTPUT)
-io.pinMode(22,io.OUTPUT)
+io.pinMode(21,io.OUTPUT) #ojos2
+io.pinMode(22,io.OUTPUT) #ojos2
 
-io.pinMode(23,io.OUTPUT)
-io.pinMode(24,io.OUTPUT)
+
+io.pinMode(23,io.OUTPUT)  #ojos3
+io.pinMode(24,io.OUTPUT)  #ojos3
+
 
 
 
@@ -78,15 +80,15 @@ def secuencia(value):
 	#print("VIBRACION DE LAS MASCARAS")
     
     # PUNTO UNO:
-        io.digitalWrite(0,io.HIGH)
-        io.digitalWrite(2,io.HIGH)
-        io.digitalWrite(3,io.HIGH)# vibrador
-        time.sleep(2) # 2 segundos
+        #io.digitalWrite(0,io.HIGH)
+        #io.digitalWrite(2,io.HIGH)
+        #io.digitalWrite(3,io.HIGH)# vibrador
+         #time.sleep(2) # 2 segundos
 	
-	io.digitalWrite(0,io.LOW)
-	io.digitalWrite(2,io.LOW)
-	io.digitalWrite(3,io.LOW)
-	time.sleep(2)    
+	 #io.digitalWrite(0,io.LOW)
+	 #io.digitalWrite(2,io.LOW)
+	 #io.digitalWrite(3,io.LOW)
+	 #time.sleep(2)
 
 
     #PUNTO DOS:
@@ -101,19 +103,21 @@ def secuencia(value):
 
     #PUNTO CUATRO:
 	#print("ENCENDER OJOS DE MASCARAS")
-        io.digitalWrite(12,io.HIGH) # para el encedido de los ojos de la mascaras
-        io.digitalWrite(13,io.HIGH)
-	io.digitalWrite(21,io.HIGH)
-	io.digitalWrite(22,io.HIGH)
-	io.digitalWrite(23,io.HIGH)
-	io.digitalWrite(24,io.HIGH)
-        time.sleep(5) #asignar un tiempo deseado
+        io.digitalWrite(12,io.HIGH) # para el encedido de los ojos1 de la mascaras
+        io.digitalWrite(13,io.HIGH)  # para el encedido de los ojos1 de la mascaras
+        
+        io.digitalWrite(21,io.HIGH)  # para el encedido de los ojos2 de la mascaras
+        io.digitalWrite(22,io.HIGH)  # para el encedido de los ojos2 de la mascaras
+        
+        io.digitalWrite(23,io.HIGH)  # para el encedido de los ojos3 de la mascaras
+        io.digitalWrite(24,io.HIGH)  # para el encedido de los ojos3 de la mascaras
+        time.sleep(5) #asignar un tiempo deseado PARA QUE ESTEN ENCENDIDOS LOS OJOS
 	
     #PUNTO CINCO:
 
     #print("ENCENDER PANTALLA")
         io.digitalWrite(14,io.HIGH)  # encendido de la pantalla 
-        time.sleep(5) #asignar tiempo de acuerdo al encendido de la pantalla
+        time.sleep(5) #asignar tiempo de acuerdo al encendido de la pantalla, esto va de la mano con el tiempo de duracion del video
         
 
         #print("EMPIEZA VIDEO")
@@ -129,25 +133,34 @@ def secuencia(value):
 
     ###### CUANDO FINALIZA EL VIDEO
     ## ASIGNAR EL TIEMPO DESEADO EN time.sleep(TIEMPO EN SEGUNDOS)
-    	#print("ENCENDER LUCES")
+    
+        #print("ENCENDER LUCES")
         io.digitalWrite(4,io.HIGH)
+        
     	#print("APAGAR PANTALLA")
     	io.digitalWrite(14,io.LOW)
-    	time.sleep(5)
+        time.sleep(5) #tiempo de apagado de la pantalla hasta terminar la ronda
+        
     	#print("apagar ojos")
-    	io.digitalWrite(12,io.LOW) 
-        io.digitalWrite(13,io.LOW)
-	io.digitalWrite(21,io.LOW)
-	io.digitalWrite(22,io.LOW)
-	io.digitalWrite(23,io.LOW)
-	io.digitalWrite(24,io.LOW)
-        time.sleep(5)
-    	#print("cierra ventana")
-    	io.digitalWrite(5,io.LOW)
-    	#print("vibracion")
-    	io.digitalWrite(0,io.LOW)
-        io.digitalWrite(2,io.LOW)
-        io.digitalWrite(3,io.LOW)
+        io.digitalWrite(12,io.LOW)  #ojos1
+        io.digitalWrite(13,io.LOW) #ojos1
+        
+        io.digitalWrite(21,io.LOW)  #ojos2
+        io.digitalWrite(22,io.LOW)#ojos2
+        
+        io.digitalWrite(23,io.LOW)#ojos3
+        io.digitalWrite(24,io.LOW)#ojos3
+        time.sleep(5) #tiempo de apagado de los ojos hasta terminar la ronda
+        
+        
+    
+    	io.digitalWrite(5,io.LOW) #ventana que se cierra
+        
+        #io.digitalWrite(0,io.LOW)
+        #io.digitalWrite(2,io.LOW)
+        #io.digitalWrite(3,io.LOW)
+
+
         time.sleep(100) #tiempo de reinicio
         
 	
@@ -166,36 +179,47 @@ def checkStatus():
     
         
     
-    if (io.digitalRead(8) == io.HIGH or io.digitalRead(15) == io.HIGH )and (io.digitalRead(9) == io.HIGH or io.digitalRead(16) == io.HIGH ) and (io.digitalRead(7) == io.HIGH or io.digitalRead(1) == io.HIGH ):
+    if ((io.digitalRead(8) == io.HIGH) and (io.digitalRead(9) == io.HIGH) and (io.digitalRead(7) == io.HIGH)):
         return True
-    else:
-        if ((io.digitalRead(8) == io.LOW or io.digitalRead(15) == io.LOW )and (io.digitalRead(9) == io.LOW or io.digitalRead(16) == io.LOW ) and (io.digitalRead(7) == io.LOW or io.digitalRead(1) == io.LOW )):
+    elif ((io.digitalRead(8) == io.LOW) and (io.digitalRead(9) == io.LOW) and (io.digitalRead(7) == io.LOW)):
+
             varible = True
             return False
-    
+    else:
+        varible = True
+        return False
+
 
 
    
 while True:
     io.digitalWrite(4,io.HIGH) # Luz encendida
-    io.digitalWrite(0,io.LOW)
-    io.digitalWrite(2,io.LOW)
-    io.digitalWrite(3,io.LOW)# vibrador apagado
+    
+    #io.digitalWrite(0,io.LOW)
+    #io.digitalWrite(2,io.LOW)
+    #io.digitalWrite(3,io.LOW)# vibrador apagado
     
     io.digitalWrite(5,io.LOW)# ventana que se va abrir apagado
  
-    io.digitalWrite(12,io.LOW) 
-    io.digitalWrite(13,io.LOW) # ojos de las mascaras apagado
+    io.digitalWrite(12,io.LOW) #ojos1
+    io.digitalWrite(13,io.LOW) # ojos1 de las mascaras apagado
     
-    io.digitalWrite(14,io.LOW)# pantalla apagado
+    io.digitalWrite(21,io.LOW)  #ojos2
+    io.digitalWrite(22,io.LOW)#ojos2
+        
+    io.digitalWrite(23,io.LOW)#ojos3
+    io.digitalWrite(24,io.LOW)#ojos3
+    
+    
+    io.digitalWrite(14,io.LOW)# pantalla TV apagada
 
-    io.digitalRead(8)
-    io.digitalRead(9)
-    io.digitalRead(7)
+    io.digitalRead(8) #lectura de mascaras
+    io.digitalRead(9) #lectura de mascaras
+    io.digitalRead(7) #lectura de mascaras
 
-    io.digitalRead(15)
-    io.digitalRead(16)
-    io.digitalRead(1)
+    #io.digitalRead(15)
+    #io.digitalRead(16)
+    #io.digitalRead(1)
 
     # verificar el estado actual - mascaras
     if(checkStatus()):
