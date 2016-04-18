@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 
 #import RPi.GPIO as GPIO # LIBRERIA NECESARIA PARA INTERACTUAR CON LA LOS PINES DE LA RASPBERRY
 
