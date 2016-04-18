@@ -93,8 +93,7 @@ void loop() {
         push(currentValue);
         //Se imprime la cola 
         printList();
-        delay(2000);/
-        /Delay de la lectura
+        delay(2000);//Delay de la lectura
   }//fin del ciclo principal
   
   //Se ingresó la serie correctam
