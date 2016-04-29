@@ -1,3 +1,4 @@
+#include <SPI.h>
 #include <Wire.h>
 #include <pca9555.h>
 #define LOCK 4
